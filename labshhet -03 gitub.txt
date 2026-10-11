@@ -1,0 +1,1295 @@
+==================================================
+        COER UNIVERSITY, ROORKEE, UTTARAKHAND
+    LAB SHEET – 3: Flutter User Input & Basic Interaction
+==========================================================================================
+        COER UNIVERSITY, ROORKEE, UTTARAKHAND
+    LAB SHEET – 3: Flutter User Input & Basic Interaction
+==================================================
+
+1. Display Student Name
+--------------------------------------------------
+class Program1 extends StatefulWidget {
+  const Program1({super.key});
+  @override
+  State<Program1> createState() => _Program1State();
+}
+class _Program1State extends State<Program1> {
+  final _controller = TextEditingController();
+  String _name = '';
+  @override
+  Widget build(BuildContext context) => Column(
+    children: [
+      TextField(controller: _controller, decoration: const InputDecoration(labelText: 'Enter Student Name')),
+      ElevatedButton(onPressed: () => setState(() => _name = _controller.text), child: const Text('Display')),
+      Text('Student Name: $_name', style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+    ],
+  );
+}
+
+2. Sum of Two Numbers
+--------------------------------------------------
+class Program2 extends StatefulWidget {
+  const Program2({super.key});
+  @override
+  State<Program2> createState() => _Program2State();
+}
+class _Program2State extends State<Program2> {
+  final _n1 = TextEditingController(), _n2 = TextEditingController();
+  String _sum = '';
+  @override
+  Widget build(BuildContext context) => Column(
+    children: [
+      TextField(controller: _n1, keyboardType: TextInputType.number, decoration: const InputDecoration(labelText: 'Number 1')),
+      TextField(controller: _n2, keyboardType: TextInputType.number, decoration: const InputDecoration(labelText: 'Number 2')),
+      ElevatedButton(
+        onPressed: () {
+          double a = double.tryParse(_n1.text) ?? 0, b = double.tryParse(_n2.text) ?? 0;
+          setState(() => _sum = 'Sum: ${a + b}');
+        },
+        child: const Text('Calculate Sum'),
+      ),
+      Text(_sum, style: const TextStyle(fontSize: 18)),
+    ],
+  );
+}
+
+3. Arithmetic Operations (+, -, *, /)
+--------------------------------------------------
+class Program3 extends StatefulWidget {
+  const Program3({super.key});
+  @override
+  State<Program3> createState() => _Program3State();
+}
+class _Program3State extends State<Program3> {
+  final _n1 = TextEditingController(), _n2 = TextEditingController();
+  String _res = '';
+  void _calc(String op) {
+    double a = double.tryParse(_n1.text) ?? 0, b = double.tryParse(_n2.text) ?? 0;
+    setState(() {
+      if (op == '+') _res = 'Result: ${a + b}';
+      if (op == '-') _res = 'Result: ${a - b}';
+      if (op == '*') _res = 'Result: ${a * b}';
+      if (op == '/') _res = b != 0 ? 'Result: ${a / b}' : 'Cannot divide by zero';
+    });
+  }
+  @override
+  Widget build(BuildContext context) => Column(
+    children: [
+      TextField(controller: _n1, keyboardType: TextInputType.number, decoration: const InputDecoration(labelText: 'Number 1')),
+      TextField(controller: _n2, keyboardType: TextInputType.number, decoration: const InputDecoration(labelText: 'Number 2')),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          ElevatedButton(onPressed: () => _calc('+'), child: const Text('+')),
+          ElevatedButton(onPressed: () => _calc('-'), child: const Text('-')),
+          ElevatedButton(onPressed: () => _calc('*'), child: const Text('*')),
+          ElevatedButton(onPressed: () => _calc('/'), child: const Text('/')),
+        ],
+      ),
+      Text(_res, style: const TextStyle(fontSize: 18)),
+    ],
+  );
+}
+
+4. Toggle Display Text
+--------------------------------------------------
+class Program4 extends StatefulWidget {
+  const Program4({super.key});
+  @override
+  State<Program4> createState() => _Program4State();
+}
+class _Program4State extends State<Program4> {
+  String _text = 'Initial Text';
+  @override
+  Widget build(BuildContext context) => Column(
+    children: [
+      Text(_text, style: const TextStyle(fontSize: 20)),
+      ElevatedButton(
+        onPressed: () => setState(() => _text = _text == 'Initial Text' ? 'Text Changed!' : 'Initial Text'),
+        child: const Text('Change Text'),
+      ),
+    ],
+  );
+}
+
+5. ElevatedButton with SnackBar
+--------------------------------------------------
+class Program5 extends StatelessWidget {
+  const Program5({super.key});
+  @override
+  Widget build(BuildContext context) => Center(
+    child: ElevatedButton(
+      onPressed: () => ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Hello from SnackBar!')),
+      ),
+      child: const Text('Show SnackBar'),
+    ),
+  );
+}
+
+6. Submit and Reset Buttons
+--------------------------------------------------
+class Program6 extends StatefulWidget {
+  const Program6({super.key});
+  @override
+  State<Program6> createState() => _Program6State();
+}
+class _Program6State extends State<Program6> {
+  final _controller = TextEditingController();
+  String _msg = '';
+  @override
+  Widget build(BuildContext context) => Column(
+    children: [
+      TextField(controller: _controller, decoration: const InputDecoration(labelText: 'Enter Data')),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          ElevatedButton(onPressed: () => setState(() => _msg = 'Submitted: ${_controller.text}'), child: const Text('Submit')),
+          ElevatedButton(onPressed: () => setState(() { _controller.clear(); _msg = 'Form Reset'; }), child: const Text('Reset')),
+        ],
+      ),
+      Text(_msg),
+    ],
+  );
+}
+
+7. Total Marks Calculation
+--------------------------------------------------
+class Program7 extends StatefulWidget {
+  const Program7({super.key});
+  @override
+  State<Program7> createState() => _Program7State();
+}
+class _Program7State extends State<Program7> {
+  final _name = TextEditingController(), _m1 = TextEditingController(), _m2 = TextEditingController(), _m3 = TextEditingController();
+  String _res = '';
+  @override
+  Widget build(BuildContext context) => ListView(
+    children: [
+      TextField(controller: _name, decoration: const InputDecoration(labelText: 'Student Name')),
+      TextField(controller: _m1, keyboardType: TextInputType.number, decoration: const InputDecoration(labelText: 'Subject 1')),
+      TextField(controller: _m2, keyboardType: TextInputType.number, decoration: const InputDecoration(labelText: 'Subject 2')),
+      TextField(controller: _m3, keyboardType: TextInputType.number, decoration: const InputDecoration(labelText: 'Subject 3')),
+      ElevatedButton(
+        onPressed: () {
+          double total = (double.tryParse(_m1.text) ?? 0) + (double.tryParse(_m2.text) ?? 0) + (double.tryParse(_m3.text) ?? 0);
+          setState(() => _res = 'Student: ${_name.text}\nTotal Marks: $total');
+        },
+        child: const Text('Calculate'),
+      ),
+      Text(_res, style: const TextStyle(fontSize: 16)),
+    ],
+  );
+}
+
+8. Percentage Calculation
+--------------------------------------------------
+class Program8 extends StatefulWidget {
+  const Program8({super.key});
+  @override
+  State<Program8> createState() => _Program8State();
+}
+class _Program8State extends State<Program8> {
+  final _m1 = TextEditingController(), _m2 = TextEditingController(), _m3 = TextEditingController();
+  String _res = '';
+  @override
+  Widget build(BuildContext context) => Column(
+    children: [
+      TextField(controller: _m1, keyboardType: TextInputType.number, decoration: const InputDecoration(labelText: 'Marks 1')),
+      TextField(controller: _m2, keyboardType: TextInputType.number, decoration: const InputDecoration(labelText: 'Marks 2')),
+      TextField(controller: _m3, keyboardType: TextInputType.number, decoration: const InputDecoration(labelText: 'Marks 3')),
+      ElevatedButton(
+        onPressed: () {
+          double total = (double.tryParse(_m1.text) ?? 0) + (double.tryParse(_m2.text) ?? 0) + (double.tryParse(_m3.text) ?? 0);
+          double perc = (total / 300) * 100;
+          setState(() => _res = 'Percentage: ${perc.toStringAsFixed(2)}%');
+        },
+        child: const Text('Calculate %'),
+      ),
+      Text(_res),
+    ],
+  );
+}
+
+9. Even or Odd Checker
+--------------------------------------------------
+class Program9 extends StatefulWidget {
+  const Program9({super.key});
+  @override
+  State<Program9> createState() => _Program9State();
+}
+class _Program9State extends State<Program9> {
+  final _num = TextEditingController();
+  String _res = '';
+  @override
+  Widget build(BuildContext context) => Column(
+    children: [
+      TextField(controller: _num, keyboardType: TextInputType.number, decoration: const InputDecoration(labelText: 'Enter Number')),
+      ElevatedButton(
+        onPressed: () {
+          int? n = int.tryParse(_num.text);
+          setState(() => _res = n == null ? 'Invalid Number' : (n % 2 == 0 ? 'Even Number' : 'Odd Number'));
+        },
+        child: const Text('Check'),
+      ),
+      Text(_res),
+    ],
+  );
+}
+
+10. Positive, Negative, or Zero
+--------------------------------------------------
+class Program10 extends StatefulWidget {
+  const Program10({super.key});
+  @override
+  State<Program10> createState() => _Program10State();
+}
+class _Program10State extends State<Program10> {
+  final _num = TextEditingController();
+  String _res = '';
+  @override
+  Widget build(BuildContext context) => Column(
+    children: [
+      TextField(controller: _num, keyboardType: TextInputType.number, decoration: const InputDecoration(labelText: 'Enter Number')),
+      ElevatedButton(
+        onPressed: () {
+          double? n = double.tryParse(_num.text);
+          setState(() {
+            if (n == null) _res = 'Invalid Input';
+            else if (n > 0) _res = 'Positive Number';
+            else if (n < 0) _res = 'Negative Number';
+            else _res = 'Zero';
+          });
+        },
+        child: const Text('Check Sign'),
+      ),
+      Text(_res),
+    ],
+  );
+}
+
+11. Celsius to Fahrenheit
+--------------------------------------------------
+class Program11 extends StatefulWidget {
+  const Program11({super.key});
+  @override
+  State<Program11> createState() => _Program11State();
+}
+class _Program11State extends State<Program11> {
+  final _c = TextEditingController();
+  String _res = '';
+  @override
+  Widget build(BuildContext context) => Column(
+    children: [
+      TextField(controller: _c, keyboardType: TextInputType.number, decoration: const InputDecoration(labelText: 'Celsius (°C)')),
+      ElevatedButton(
+        onPressed: () {
+          double c = double.tryParse(_c.text) ?? 0;
+          double f = (c * 9 / 5) + 32;
+          setState(() => _res = 'Fahrenheit: ${f.toStringAsFixed(2)} °F');
+        },
+        child: const Text('Convert'),
+      ),
+      Text(_res),
+    ],
+  );
+}
+
+12. Area of Rectangle
+--------------------------------------------------
+class Program12 extends StatefulWidget {
+  const Program12({super.key});
+  @override
+  State<Program12> createState() => _Program12State();
+}
+class _Program12State extends State<Program12> {
+  final _len = TextEditingController(), _wid = TextEditingController();
+  String _res = '';
+  @override
+  Widget build(BuildContext context) => Column(
+    children: [
+      TextField(controller: _len, keyboardType: TextInputType.number, decoration: const InputDecoration(labelText: 'Length')),
+      TextField(controller: _wid, keyboardType: TextInputType.number, decoration: const InputDecoration(labelText: 'Width')),
+      ElevatedButton(
+        onPressed: () {
+          double l = double.tryParse(_len.text) ?? 0, w = double.tryParse(_wid.text) ?? 0;
+          setState(() => _res = 'Area: ${l * w}');
+        },
+        child: const Text('Calculate Area'),
+      ),
+      Text(_res),
+    ],
+  );
+}
+
+13. BMI Calculator
+--------------------------------------------------
+class Program13 extends StatefulWidget {
+  const Program13({super.key});
+  @override
+  State<Program13> createState() => _Program13State();
+}
+class _Program13State extends State<Program13> {
+  final _h = TextEditingController(), _w = TextEditingController();
+  String _res = '';
+  @override
+  Widget build(BuildContext context) => Column(
+    children: [
+      TextField(controller: _h, keyboardType: TextInputType.number, decoration: const InputDecoration(labelText: 'Height (m)')),
+      TextField(controller: _w, keyboardType: TextInputType.number, decoration: const InputDecoration(labelText: 'Weight (kg)')),
+      ElevatedButton(
+        onPressed: () {
+          double h = double.tryParse(_h.text) ?? 0, w = double.tryParse(_w.text) ?? 0;
+          if (h > 0) {
+            double bmi = w / (h * h);
+            setState(() => _res = 'BMI: ${bmi.toStringAsFixed(2)}');
+          }
+        },
+        child: const Text('Calculate BMI'),
+      ),
+      Text(_res),
+    ],
+  );
+}
+
+14. Terms and Conditions Checkbox
+--------------------------------------------------
+class Program14 extends StatefulWidget {
+  const Program14({super.key});
+  @override
+  State<Program14> createState() => _Program14State();
+}
+class _Program14State extends State<Program14> {
+  bool _agreed = false;
+  @override
+  Widget build(BuildContext context) => Column(
+    children: [
+      CheckboxListTile(
+        title: const Text('I agree to the terms and conditions'),
+        value: _agreed,
+        onChanged: (val) => setState(() => _agreed = val ?? false),
+      ),
+      Text(_agreed ? 'Agreed' : 'Not Agreed'),
+    ],
+  );
+}
+
+15. Gender Radio Buttons
+--------------------------------------------------
+class Program15 extends StatefulWidget {
+  const Program15({super.key});
+  @override
+  State<Program15> createState() => _Program15State();
+}
+class _Program15State extends State<Program15> {
+  String? _gender;
+  @override
+  Widget build(BuildContext context) => Column(
+    children: [
+      RadioListTile<String>(title: const Text('Male'), value: 'Male', groupValue: _gender, onChanged: (v) => setState(() => _gender = v)),
+      RadioListTile<String>(title: const Text('Female'), value: 'Female', groupValue: _gender, onChanged: (v) => setState(() => _gender = v)),
+      RadioListTile<String>(title: const Text('Other'), value: 'Other', groupValue: _gender, onChanged: (v) => setState(() => _gender = v)),
+      Text('Selected: ${_gender ?? "None"}'),
+    ],
+  );
+}
+
+16. Course Selection Radio Buttons
+--------------------------------------------------
+class Program16 extends StatefulWidget {
+  const Program16({super.key});
+  @override
+  State<Program16> createState() => _Program16State();
+}
+class _Program16State extends State<Program16> {
+  String? _course;
+  @override
+  Widget build(BuildContext context) => Column(
+    children: [
+      RadioListTile<String>(title: const Text('B.Tech'), value: 'B.Tech', groupValue: _course, onChanged: (v) => setState(() => _course = v)),
+      RadioListTile<String>(title: const Text('BCA'), value: 'BCA', groupValue: _course, onChanged: (v) => setState(() => _course = v)),
+      RadioListTile<String>(title: const Text('MCA'), value: 'MCA', groupValue: _course, onChanged: (v) => setState(() => _course = v)),
+      Text('Selected Course: ${_course ?? "None"}'),
+    ],
+  );
+}
+
+17. Semester DropdownButton
+--------------------------------------------------
+class Program17 extends StatefulWidget {
+  const Program17({super.key});
+  @override
+  State<Program17> createState() => _Program17State();
+}
+class _Program17State extends State<Program17> {
+  String? _sem;
+  @override
+  Widget build(BuildContext context) => Column(
+    children: [
+      DropdownButton<String>(
+        hint: const Text('Select Semester'),
+        value: _sem,
+        items: ['Sem 1', 'Sem 2', 'Sem 3', 'Sem 4', 'Sem 5', 'Sem 6'].map((s) => DropdownMenuItem(value: s, child: Text(s))).toList(),
+        onChanged: (v) => setState(() => _sem = v),
+      ),
+      Text('Semester: ${_sem ?? "None"}'),
+    ],
+  );
+}
+
+18. Department DropdownButton
+--------------------------------------------------
+class Program18 extends StatefulWidget {
+  const Program18({super.key});
+  @override
+  State<Program18> createState() => _Program18State();
+}
+class _Program18State extends State<Program18> {
+  String? _dept;
+  @override
+  Widget build(BuildContext context) => Column(
+    children: [
+      DropdownButton<String>(
+        hint: const Text('Select Department'),
+        value: _dept,
+        items: ['CSE', 'ECE', 'ME', 'Civil', 'IT'].map((d) => DropdownMenuItem(value: d, child: Text(d))).toList(),
+        onChanged: (v) => setState(() => _dept = v),
+      ),
+      Text('Department: ${_dept ?? "None"}'),
+    ],
+  );
+}
+
+19. Switch ON/OFF
+--------------------------------------------------
+class Program19 extends StatefulWidget {
+  const Program19({super.key});
+  @override
+  State<Program19> createState() => _Program19State();
+}
+class _Program19State extends State<Program19> {
+  bool _isOn = false;
+  @override
+  Widget build(BuildContext context) => Row(
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: [
+      Text(_isOn ? 'Setting ON' : 'Setting OFF'),
+      Switch(value: _isOn, onChanged: (v) => setState(() => _isOn = v)),
+    ],
+  );
+}
+
+20. Combination of Checkbox, Radio, Dropdown & Switch
+--------------------------------------------------
+class Program20 extends StatefulWidget {
+  const Program20({super.key});
+  @override
+  State<Program20> createState() => _Program20State();
+}
+class _Program20State extends State<Program20> {
+  bool _check = false;
+  String? _radio;
+  String? _drop;
+  bool _switchVal = false;
+  @override
+  Widget build(BuildContext context) => ListView(
+    children: [
+      CheckboxListTile(title: const Text('Agree'), value: _check, onChanged: (v) => setState(() => _check = v!)),
+      RadioListTile<String>(title: const Text('Option A'), value: 'A', groupValue: _radio, onChanged: (v) => setState(() => _radio = v)),
+      DropdownButton<String>(
+        hint: const Text('Choose Item'),
+        value: _drop,
+        items: ['Item 1', 'Item 2'].map((i) => DropdownMenuItem(value: i, child: Text(i))).toList(),
+        onChanged: (v) => setState(() => _drop = v),
+      ),
+      SwitchListTile(title: const Text('Toggle'), value: _switchVal, onChanged: (v) => setState(() => _switchVal = v)),
+    ],
+  );
+}
+
+21. Login Form UI
+--------------------------------------------------
+class Program21 extends StatefulWidget {
+  const Program21({super.key});
+  @override
+  State<Program21> createState() => _Program21State();
+}
+class _Program21State extends State<Program21> {
+  final _u = TextEditingController(), _p = TextEditingController();
+  @override
+  Widget build(BuildContext context) => Column(
+    children: [
+      TextField(controller: _u, decoration: const InputDecoration(labelText: 'Username')),
+      TextField(controller: _p, obscureText: true, decoration: const InputDecoration(labelText: 'Password')),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          ElevatedButton(onPressed: () {}, child: const Text('Login')),
+          ElevatedButton(onPressed: () { _u.clear(); _p.clear(); }, child: const Text('Reset')),
+        ],
+      )
+    ],
+  );
+}
+
+22. Registration Form UI
+--------------------------------------------------
+class Program22 extends StatefulWidget {
+  const Program22({super.key});
+  @override
+  State<Program22> createState() => _Program22State();
+}
+class _Program22State extends State<Program22> {
+  String? _gender;
+  @override
+  Widget build(BuildContext context) => ListView(
+    children: [
+      const TextField(decoration: InputDecoration(labelText: 'Name')),
+      const TextField(decoration: InputDecoration(labelText: 'Email')),
+      const TextField(obscureText: true, decoration: InputDecoration(labelText: 'Password')),
+      Row(
+        children: [
+          Expanded(child: RadioListTile(title: const Text('M'), value: 'M', groupValue: _gender, onChanged: (v) => setState(() => _gender = v))),
+          Expanded(child: RadioListTile(title: const Text('F'), value: 'F', groupValue: _gender, onChanged: (v) => setState(() => _gender = v))),
+        ],
+      ),
+      const TextField(decoration: InputDecoration(labelText: 'Course')),
+      ElevatedButton(onPressed: () {}, child: const Text('Register')),
+    ],
+  );
+}
+
+23. Student Feedback Form
+--------------------------------------------------
+class Program23 extends StatefulWidget {
+  const Program23({super.key});
+  @override
+  State<Program23> createState() => _Program23State();
+}
+class _Program23State extends State<Program23> {
+  double _rating = 3.0;
+  @override
+  Widget build(BuildContext context) => Column(
+    children: [
+      const TextField(decoration: InputDecoration(labelText: 'Name')),
+      Text('Rating: ${_rating.toInt()}'),
+      Slider(value: _rating, min: 1, max: 5, divisions: 4, onChanged: (v) => setState(() => _rating = v)),
+      const TextField(decoration: InputDecoration(labelText: 'Feedback')),
+      ElevatedButton(onPressed: () {}, child: const Text('Submit')),
+    ],
+  );
+}
+
+24. Simple Calculator
+--------------------------------------------------
+class Program24 extends StatefulWidget {
+  const Program24({super.key});
+  @override
+  State<Program24> createState() => _Program24State();
+}
+class _Program24State extends State<Program24> {
+  final _n1 = TextEditingController(), _n2 = TextEditingController();
+  String _res = '0';
+  void _op(String o) {
+    double a = double.tryParse(_n1.text) ?? 0, b = double.tryParse(_n2.text) ?? 0;
+    setState(() {
+      if (o == '+') _res = '${a + b}';
+      if (o == '-') _res = '${a - b}';
+      if (o == '*') _res = '${a * b}';
+      if (o == '/') _res = b != 0 ? '${a / b}' : 'Error';
+    });
+  }
+  @override
+  Widget build(BuildContext context) => Column(
+    children: [
+      TextField(controller: _n1, keyboardType: TextInputType.number, decoration: const InputDecoration(labelText: 'Num 1')),
+      TextField(controller: _n2, keyboardType: TextInputType.number, decoration: const InputDecoration(labelText: 'Num 2')),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          ElevatedButton(onPressed: () => _op('+'), child: const Text('+')),
+          ElevatedButton(onPressed: () => _op('-'), child: const Text('-')),
+          ElevatedButton(onPressed: () => _op('*'), child: const Text('*')),
+          ElevatedButton(onPressed: () => _op('/'), child: const Text('/')),
+        ],
+      ),
+      Text('Result: $_res', style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+    ],
+  );
+}
+
+25. Student Result Application (Pass/Fail)
+--------------------------------------------------
+class Program25 extends StatefulWidget {
+  const Program25({super.key});
+  @override
+  State<Program25> createState() => _Program25State();
+}
+class _Program25State extends State<Program25> {
+  final _name = TextEditingController(), _m1 = TextEditingController(), _m2 = TextEditingController(), _m3 = TextEditingController();
+  String _res = '';
+  @override
+  Widget build(BuildContext context) => ListView(
+    children: [
+      TextField(controller: _name, decoration: const InputDecoration(labelText: 'Name')),
+      TextField(controller: _m1, keyboardType: TextInputType.number, decoration: const InputDecoration(labelText: 'Subject 1')),
+      TextField(controller: _m2, keyboardType: TextInputType.number, decoration: const InputDecoration(labelText: 'Subject 2')),
+      TextField(controller: _m3, keyboardType: TextInputType.number, decoration: const InputDecoration(labelText: 'Subject 3')),
+      ElevatedButton(
+        onPressed: () {
+          double m1 = double.tryParse(_m1.text) ?? 0, m2 = double.tryParse(_m2.text) ?? 0, m3 = double.tryParse(_m3.text) ?? 0;
+          double total = m1 + m2 + m3;
+          double perc = (total / 300) * 100;
+          String status = (m1 >= 33 && m2 >= 33 && m3 >= 33 && perc >= 33) ? 'PASS' : 'FAIL';
+          setState(() => _res = 'Student: ${_name.text}\nTotal: $total\nPercentage: ${perc.toStringAsFixed(2)}%\nStatus: $status');
+        },
+        child: const Text('Generate Result'),
+      ),
+      Text(_res, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+    ],
+  );
+}s==========
+
+1. Display Student Name
+--------------------------------------------------
+class Program1 extends StatefulWidget {
+  const Program1({super.key});
+  @override
+  State<Program1> createState() => _Program1State();
+}
+class _Program1State extends State<Program1> {
+  final _controller = TextEditingController();
+  String _name = '';
+  @override
+  Widget build(BuildContext context) => Column(
+    children: [
+      TextField(controller: _controller, decoration: const InputDecoration(labelText: 'Enter Student Name')),
+      ElevatedButton(onPressed: () => setState(() => _name = _controller.text), child: const Text('Display')),
+      Text('Student Name: $_name', style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+    ],
+  );
+}
+
+2. Sum of Two Numbers
+--------------------------------------------------
+class Program2 extends StatefulWidget {
+  const Program2({super.key});
+  @override
+  State<Program2> createState() => _Program2State();
+}
+class _Program2State extends State<Program2> {
+  final _n1 = TextEditingController(), _n2 = TextEditingController();
+  String _sum = '';
+  @override
+  Widget build(BuildContext context) => Column(
+    children: [
+      TextField(controller: _n1, keyboardType: TextInputType.number, decoration: const InputDecoration(labelText: 'Number 1')),
+      TextField(controller: _n2, keyboardType: TextInputType.number, decoration: const InputDecoration(labelText: 'Number 2')),
+      ElevatedButton(
+        onPressed: () {
+          double a = double.tryParse(_n1.text) ?? 0, b = double.tryParse(_n2.text) ?? 0;
+          setState(() => _sum = 'Sum: ${a + b}');
+        },
+        child: const Text('Calculate Sum'),
+      ),
+      Text(_sum, style: const TextStyle(fontSize: 18)),
+    ],
+  );
+}
+
+3. Arithmetic Operations (+, -, *, /)
+--------------------------------------------------
+class Program3 extends StatefulWidget {
+  const Program3({super.key});
+  @override
+  State<Program3> createState() => _Program3State();
+}
+class _Program3State extends State<Program3> {
+  final _n1 = TextEditingController(), _n2 = TextEditingController();
+  String _res = '';
+  void _calc(String op) {
+    double a = double.tryParse(_n1.text) ?? 0, b = double.tryParse(_n2.text) ?? 0;
+    setState(() {
+      if (op == '+') _res = 'Result: ${a + b}';
+      if (op == '-') _res = 'Result: ${a - b}';
+      if (op == '*') _res = 'Result: ${a * b}';
+      if (op == '/') _res = b != 0 ? 'Result: ${a / b}' : 'Cannot divide by zero';
+    });
+  }
+  @override
+  Widget build(BuildContext context) => Column(
+    children: [
+      TextField(controller: _n1, keyboardType: TextInputType.number, decoration: const InputDecoration(labelText: 'Number 1')),
+      TextField(controller: _n2, keyboardType: TextInputType.number, decoration: const InputDecoration(labelText: 'Number 2')),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          ElevatedButton(onPressed: () => _calc('+'), child: const Text('+')),
+          ElevatedButton(onPressed: () => _calc('-'), child: const Text('-')),
+          ElevatedButton(onPressed: () => _calc('*'), child: const Text('*')),
+          ElevatedButton(onPressed: () => _calc('/'), child: const Text('/')),
+        ],
+      ),
+      Text(_res, style: const TextStyle(fontSize: 18)),
+    ],
+  );
+}
+
+4. Toggle Display Text
+--------------------------------------------------
+class Program4 extends StatefulWidget {
+  const Program4({super.key});
+  @override
+  State<Program4> createState() => _Program4State();
+}
+class _Program4State extends State<Program4> {
+  String _text = 'Initial Text';
+  @override
+  Widget build(BuildContext context) => Column(
+    children: [
+      Text(_text, style: const TextStyle(fontSize: 20)),
+      ElevatedButton(
+        onPressed: () => setState(() => _text = _text == 'Initial Text' ? 'Text Changed!' : 'Initial Text'),
+        child: const Text('Change Text'),
+      ),
+    ],
+  );
+}
+
+5. ElevatedButton with SnackBar
+--------------------------------------------------
+class Program5 extends StatelessWidget {
+  const Program5({super.key});
+  @override
+  Widget build(BuildContext context) => Center(
+    child: ElevatedButton(
+      onPressed: () => ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Hello from SnackBar!')),
+      ),
+      child: const Text('Show SnackBar'),
+    ),
+  );
+}
+
+6. Submit and Reset Buttons
+--------------------------------------------------
+class Program6 extends StatefulWidget {
+  const Program6({super.key});
+  @override
+  State<Program6> createState() => _Program6State();
+}
+class _Program6State extends State<Program6> {
+  final _controller = TextEditingController();
+  String _msg = '';
+  @override
+  Widget build(BuildContext context) => Column(
+    children: [
+      TextField(controller: _controller, decoration: const InputDecoration(labelText: 'Enter Data')),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          ElevatedButton(onPressed: () => setState(() => _msg = 'Submitted: ${_controller.text}'), child: const Text('Submit')),
+          ElevatedButton(onPressed: () => setState(() { _controller.clear(); _msg = 'Form Reset'; }), child: const Text('Reset')),
+        ],
+      ),
+      Text(_msg),
+    ],
+  );
+}
+
+7. Total Marks Calculation
+--------------------------------------------------
+class Program7 extends StatefulWidget {
+  const Program7({super.key});
+  @override
+  State<Program7> createState() => _Program7State();
+}
+class _Program7State extends State<Program7> {
+  final _name = TextEditingController(), _m1 = TextEditingController(), _m2 = TextEditingController(), _m3 = TextEditingController();
+  String _res = '';
+  @override
+  Widget build(BuildContext context) => ListView(
+    children: [
+      TextField(controller: _name, decoration: const InputDecoration(labelText: 'Student Name')),
+      TextField(controller: _m1, keyboardType: TextInputType.number, decoration: const InputDecoration(labelText: 'Subject 1')),
+      TextField(controller: _m2, keyboardType: TextInputType.number, decoration: const InputDecoration(labelText: 'Subject 2')),
+      TextField(controller: _m3, keyboardType: TextInputType.number, decoration: const InputDecoration(labelText: 'Subject 3')),
+      ElevatedButton(
+        onPressed: () {
+          double total = (double.tryParse(_m1.text) ?? 0) + (double.tryParse(_m2.text) ?? 0) + (double.tryParse(_m3.text) ?? 0);
+          setState(() => _res = 'Student: ${_name.text}\nTotal Marks: $total');
+        },
+        child: const Text('Calculate'),
+      ),
+      Text(_res, style: const TextStyle(fontSize: 16)),
+    ],
+  );
+}
+
+8. Percentage Calculation
+--------------------------------------------------
+class Program8 extends StatefulWidget {
+  const Program8({super.key});
+  @override
+  State<Program8> createState() => _Program8State();
+}
+class _Program8State extends State<Program8> {
+  final _m1 = TextEditingController(), _m2 = TextEditingController(), _m3 = TextEditingController();
+  String _res = '';
+  @override
+  Widget build(BuildContext context) => Column(
+    children: [
+      TextField(controller: _m1, keyboardType: TextInputType.number, decoration: const InputDecoration(labelText: 'Marks 1')),
+      TextField(controller: _m2, keyboardType: TextInputType.number, decoration: const InputDecoration(labelText: 'Marks 2')),
+      TextField(controller: _m3, keyboardType: TextInputType.number, decoration: const InputDecoration(labelText: 'Marks 3')),
+      ElevatedButton(
+        onPressed: () {
+          double total = (double.tryParse(_m1.text) ?? 0) + (double.tryParse(_m2.text) ?? 0) + (double.tryParse(_m3.text) ?? 0);
+          double perc = (total / 300) * 100;
+          setState(() => _res = 'Percentage: ${perc.toStringAsFixed(2)}%');
+        },
+        child: const Text('Calculate %'),
+      ),
+      Text(_res),
+    ],
+  );
+}
+
+9. Even or Odd Checker
+--------------------------------------------------
+class Program9 extends StatefulWidget {
+  const Program9({super.key});
+  @override
+  State<Program9> createState() => _Program9State();
+}
+class _Program9State extends State<Program9> {
+  final _num = TextEditingController();
+  String _res = '';
+  @override
+  Widget build(BuildContext context) => Column(
+    children: [
+      TextField(controller: _num, keyboardType: TextInputType.number, decoration: const InputDecoration(labelText: 'Enter Number')),
+      ElevatedButton(
+        onPressed: () {
+          int? n = int.tryParse(_num.text);
+          setState(() => _res = n == null ? 'Invalid Number' : (n % 2 == 0 ? 'Even Number' : 'Odd Number'));
+        },
+        child: const Text('Check'),
+      ),
+      Text(_res),
+    ],
+  );
+}
+
+10. Positive, Negative, or Zero
+--------------------------------------------------
+class Program10 extends StatefulWidget {
+  const Program10({super.key});
+  @override
+  State<Program10> createState() => _Program10State();
+}
+class _Program10State extends State<Program10> {
+  final _num = TextEditingController();
+  String _res = '';
+  @override
+  Widget build(BuildContext context) => Column(
+    children: [
+      TextField(controller: _num, keyboardType: TextInputType.number, decoration: const InputDecoration(labelText: 'Enter Number')),
+      ElevatedButton(
+        onPressed: () {
+          double? n = double.tryParse(_num.text);
+          setState(() {
+            if (n == null) _res = 'Invalid Input';
+            else if (n > 0) _res = 'Positive Number';
+            else if (n < 0) _res = 'Negative Number';
+            else _res = 'Zero';
+          });
+        },
+        child: const Text('Check Sign'),
+      ),
+      Text(_res),
+    ],
+  );
+}
+
+11. Celsius to Fahrenheit
+--------------------------------------------------
+class Program11 extends StatefulWidget {
+  const Program11({super.key});
+  @override
+  State<Program11> createState() => _Program11State();
+}
+class _Program11State extends State<Program11> {
+  final _c = TextEditingController();
+  String _res = '';
+  @override
+  Widget build(BuildContext context) => Column(
+    children: [
+      TextField(controller: _c, keyboardType: TextInputType.number, decoration: const InputDecoration(labelText: 'Celsius (°C)')),
+      ElevatedButton(
+        onPressed: () {
+          double c = double.tryParse(_c.text) ?? 0;
+          double f = (c * 9 / 5) + 32;
+          setState(() => _res = 'Fahrenheit: ${f.toStringAsFixed(2)} °F');
+        },
+        child: const Text('Convert'),
+      ),
+      Text(_res),
+    ],
+  );
+}
+
+12. Area of Rectangle
+--------------------------------------------------
+class Program12 extends StatefulWidget {
+  const Program12({super.key});
+  @override
+  State<Program12> createState() => _Program12State();
+}
+class _Program12State extends State<Program12> {
+  final _len = TextEditingController(), _wid = TextEditingController();
+  String _res = '';
+  @override
+  Widget build(BuildContext context) => Column(
+    children: [
+      TextField(controller: _len, keyboardType: TextInputType.number, decoration: const InputDecoration(labelText: 'Length')),
+      TextField(controller: _wid, keyboardType: TextInputType.number, decoration: const InputDecoration(labelText: 'Width')),
+      ElevatedButton(
+        onPressed: () {
+          double l = double.tryParse(_len.text) ?? 0, w = double.tryParse(_wid.text) ?? 0;
+          setState(() => _res = 'Area: ${l * w}');
+        },
+        child: const Text('Calculate Area'),
+      ),
+      Text(_res),
+    ],
+  );
+}
+
+13. BMI Calculator
+--------------------------------------------------
+class Program13 extends StatefulWidget {
+  const Program13({super.key});
+  @override
+  State<Program13> createState() => _Program13State();
+}
+class _Program13State extends State<Program13> {
+  final _h = TextEditingController(), _w = TextEditingController();
+  String _res = '';
+  @override
+  Widget build(BuildContext context) => Column(
+    children: [
+      TextField(controller: _h, keyboardType: TextInputType.number, decoration: const InputDecoration(labelText: 'Height (m)')),
+      TextField(controller: _w, keyboardType: TextInputType.number, decoration: const InputDecoration(labelText: 'Weight (kg)')),
+      ElevatedButton(
+        onPressed: () {
+          double h = double.tryParse(_h.text) ?? 0, w = double.tryParse(_w.text) ?? 0;
+          if (h > 0) {
+            double bmi = w / (h * h);
+            setState(() => _res = 'BMI: ${bmi.toStringAsFixed(2)}');
+          }
+        },
+        child: const Text('Calculate BMI'),
+      ),
+      Text(_res),
+    ],
+  );
+}
+
+14. Terms and Conditions Checkbox
+--------------------------------------------------
+class Program14 extends StatefulWidget {
+  const Program14({super.key});
+  @override
+  State<Program14> createState() => _Program14State();
+}
+class _Program14State extends State<Program14> {
+  bool _agreed = false;
+  @override
+  Widget build(BuildContext context) => Column(
+    children: [
+      CheckboxListTile(
+        title: const Text('I agree to the terms and conditions'),
+        value: _agreed,
+        onChanged: (val) => setState(() => _agreed = val ?? false),
+      ),
+      Text(_agreed ? 'Agreed' : 'Not Agreed'),
+    ],
+  );
+}
+
+15. Gender Radio Buttons
+--------------------------------------------------
+class Program15 extends StatefulWidget {
+  const Program15({super.key});
+  @override
+  State<Program15> createState() => _Program15State();
+}
+class _Program15State extends State<Program15> {
+  String? _gender;
+  @override
+  Widget build(BuildContext context) => Column(
+    children: [
+      RadioListTile<String>(title: const Text('Male'), value: 'Male', groupValue: _gender, onChanged: (v) => setState(() => _gender = v)),
+      RadioListTile<String>(title: const Text('Female'), value: 'Female', groupValue: _gender, onChanged: (v) => setState(() => _gender = v)),
+      RadioListTile<String>(title: const Text('Other'), value: 'Other', groupValue: _gender, onChanged: (v) => setState(() => _gender = v)),
+      Text('Selected: ${_gender ?? "None"}'),
+    ],
+  );
+}
+
+16. Course Selection Radio Buttons
+--------------------------------------------------
+class Program16 extends StatefulWidget {
+  const Program16({super.key});
+  @override
+  State<Program16> createState() => _Program16State();
+}
+class _Program16State extends State<Program16> {
+  String? _course;
+  @override
+  Widget build(BuildContext context) => Column(
+    children: [
+      RadioListTile<String>(title: const Text('B.Tech'), value: 'B.Tech', groupValue: _course, onChanged: (v) => setState(() => _course = v)),
+      RadioListTile<String>(title: const Text('BCA'), value: 'BCA', groupValue: _course, onChanged: (v) => setState(() => _course = v)),
+      RadioListTile<String>(title: const Text('MCA'), value: 'MCA', groupValue: _course, onChanged: (v) => setState(() => _course = v)),
+      Text('Selected Course: ${_course ?? "None"}'),
+    ],
+  );
+}
+
+17. Semester DropdownButton
+--------------------------------------------------
+class Program17 extends StatefulWidget {
+  const Program17({super.key});
+  @override
+  State<Program17> createState() => _Program17State();
+}
+class _Program17State extends State<Program17> {
+  String? _sem;
+  @override
+  Widget build(BuildContext context) => Column(
+    children: [
+      DropdownButton<String>(
+        hint: const Text('Select Semester'),
+        value: _sem,
+        items: ['Sem 1', 'Sem 2', 'Sem 3', 'Sem 4', 'Sem 5', 'Sem 6'].map((s) => DropdownMenuItem(value: s, child: Text(s))).toList(),
+        onChanged: (v) => setState(() => _sem = v),
+      ),
+      Text('Semester: ${_sem ?? "None"}'),
+    ],
+  );
+}
+
+18. Department DropdownButton
+--------------------------------------------------
+class Program18 extends StatefulWidget {
+  const Program18({super.key});
+  @override
+  State<Program18> createState() => _Program18State();
+}
+class _Program18State extends State<Program18> {
+  String? _dept;
+  @override
+  Widget build(BuildContext context) => Column(
+    children: [
+      DropdownButton<String>(
+        hint: const Text('Select Department'),
+        value: _dept,
+        items: ['CSE', 'ECE', 'ME', 'Civil', 'IT'].map((d) => DropdownMenuItem(value: d, child: Text(d))).toList(),
+        onChanged: (v) => setState(() => _dept = v),
+      ),
+      Text('Department: ${_dept ?? "None"}'),
+    ],
+  );
+}
+
+19. Switch ON/OFF
+--------------------------------------------------
+class Program19 extends StatefulWidget {
+  const Program19({super.key});
+  @override
+  State<Program19> createState() => _Program19State();
+}
+class _Program19State extends State<Program19> {
+  bool _isOn = false;
+  @override
+  Widget build(BuildContext context) => Row(
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: [
+      Text(_isOn ? 'Setting ON' : 'Setting OFF'),
+      Switch(value: _isOn, onChanged: (v) => setState(() => _isOn = v)),
+    ],
+  );
+}
+
+20. Combination of Checkbox, Radio, Dropdown & Switch
+--------------------------------------------------
+class Program20 extends StatefulWidget {
+  const Program20({super.key});
+  @override
+  State<Program20> createState() => _Program20State();
+}
+class _Program20State extends State<Program20> {
+  bool _check = false;
+  String? _radio;
+  String? _drop;
+  bool _switchVal = false;
+  @override
+  Widget build(BuildContext context) => ListView(
+    children: [
+      CheckboxListTile(title: const Text('Agree'), value: _check, onChanged: (v) => setState(() => _check = v!)),
+      RadioListTile<String>(title: const Text('Option A'), value: 'A', groupValue: _radio, onChanged: (v) => setState(() => _radio = v)),
+      DropdownButton<String>(
+        hint: const Text('Choose Item'),
+        value: _drop,
+        items: ['Item 1', 'Item 2'].map((i) => DropdownMenuItem(value: i, child: Text(i))).toList(),
+        onChanged: (v) => setState(() => _drop = v),
+      ),
+      SwitchListTile(title: const Text('Toggle'), value: _switchVal, onChanged: (v) => setState(() => _switchVal = v)),
+    ],
+  );
+}
+
+21. Login Form UI
+--------------------------------------------------
+class Program21 extends StatefulWidget {
+  const Program21({super.key});
+  @override
+  State<Program21> createState() => _Program21State();
+}
+class _Program21State extends State<Program21> {
+  final _u = TextEditingController(), _p = TextEditingController();
+  @override
+  Widget build(BuildContext context) => Column(
+    children: [
+      TextField(controller: _u, decoration: const InputDecoration(labelText: 'Username')),
+      TextField(controller: _p, obscureText: true, decoration: const InputDecoration(labelText: 'Password')),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          ElevatedButton(onPressed: () {}, child: const Text('Login')),
+          ElevatedButton(onPressed: () { _u.clear(); _p.clear(); }, child: const Text('Reset')),
+        ],
+      )
+    ],
+  );
+}
+
+22. Registration Form UI
+--------------------------------------------------
+class Program22 extends StatefulWidget {
+  const Program22({super.key});
+  @override
+  State<Program22> createState() => _Program22State();
+}
+class _Program22State extends State<Program22> {
+  String? _gender;
+  @override
+  Widget build(BuildContext context) => ListView(
+    children: [
+      const TextField(decoration: InputDecoration(labelText: 'Name')),
+      const TextField(decoration: InputDecoration(labelText: 'Email')),
+      const TextField(obscureText: true, decoration: InputDecoration(labelText: 'Password')),
+      Row(
+        children: [
+          Expanded(child: RadioListTile(title: const Text('M'), value: 'M', groupValue: _gender, onChanged: (v) => setState(() => _gender = v))),
+          Expanded(child: RadioListTile(title: const Text('F'), value: 'F', groupValue: _gender, onChanged: (v) => setState(() => _gender = v))),
+        ],
+      ),
+      const TextField(decoration: InputDecoration(labelText: 'Course')),
+      ElevatedButton(onPressed: () {}, child: const Text('Register')),
+    ],
+  );
+}
+
+23. Student Feedback Form
+--------------------------------------------------
+class Program23 extends StatefulWidget {
+  const Program23({super.key});
+  @override
+  State<Program23> createState() => _Program23State();
+}
+class _Program23State extends State<Program23> {
+  double _rating = 3.0;
+  @override
+  Widget build(BuildContext context) => Column(
+    children: [
+      const TextField(decoration: InputDecoration(labelText: 'Name')),
+      Text('Rating: ${_rating.toInt()}'),
+      Slider(value: _rating, min: 1, max: 5, divisions: 4, onChanged: (v) => setState(() => _rating = v)),
+      const TextField(decoration: InputDecoration(labelText: 'Feedback')),
+      ElevatedButton(onPressed: () {}, child: const Text('Submit')),
+    ],
+  );
+}
+
+24. Simple Calculator
+--------------------------------------------------
+class Program24 extends StatefulWidget {
+  const Program24({super.key});
+  @override
+  State<Program24> createState() => _Program24State();
+}
+class _Program24State extends State<Program24> {
+  final _n1 = TextEditingController(), _n2 = TextEditingController();
+  String _res = '0';
+  void _op(String o) {
+    double a = double.tryParse(_n1.text) ?? 0, b = double.tryParse(_n2.text) ?? 0;
+    setState(() {
+      if (o == '+') _res = '${a + b}';
+      if (o == '-') _res = '${a - b}';
+      if (o == '*') _res = '${a * b}';
+      if (o == '/') _res = b != 0 ? '${a / b}' : 'Error';
+    });
+  }
+  @override
+  Widget build(BuildContext context) => Column(
+    children: [
+      TextField(controller: _n1, keyboardType: TextInputType.number, decoration: const InputDecoration(labelText: 'Num 1')),
+      TextField(controller: _n2, keyboardType: TextInputType.number, decoration: const InputDecoration(labelText: 'Num 2')),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          ElevatedButton(onPressed: () => _op('+'), child: const Text('+')),
+          ElevatedButton(onPressed: () => _op('-'), child: const Text('-')),
+          ElevatedButton(onPressed: () => _op('*'), child: const Text('*')),
+          ElevatedButton(onPressed: () => _op('/'), child: const Text('/')),
+        ],
+      ),
+      Text('Result: $_res', style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+    ],
+  );
+}
+
+25. Student Result Application (Pass/Fail)
+--------------------------------------------------
+class Program25 extends StatefulWidget {
+  const Program25({super.key});
+  @override
+  State<Program25> createState() => _Program25State();
+}
+class _Program25State extends State<Program25> {
+  final _name = TextEditingController(), _m1 = TextEditingController(), _m2 = TextEditingController(), _m3 = TextEditingController();
+  String _res = '';
+  @override
+  Widget build(BuildContext context) => ListView(
+    children: [
+      TextField(controller: _name, decoration: const InputDecoration(labelText: 'Name')),
+      TextField(controller: _m1, keyboardType: TextInputType.number, decoration: const InputDecoration(labelText: 'Subject 1')),
+      TextField(controller: _m2, keyboardType: TextInputType.number, decoration: const InputDecoration(labelText: 'Subject 2')),
+      TextField(controller: _m3, keyboardType: TextInputType.number, decoration: const InputDecoration(labelText: 'Subject 3')),
+      ElevatedButton(
+        onPressed: () {
+          double m1 = double.tryParse(_m1.text) ?? 0, m2 = double.tryParse(_m2.text) ?? 0, m3 = double.tryParse(_m3.text) ?? 0;
+          double total = m1 + m2 + m3;
+          double perc = (total / 300) * 100;
+          String status = (m1 >= 33 && m2 >= 33 && m3 >= 33 && perc >= 33) ? 'PASS' : 'FAIL';
+          setState(() => _res = 'Student: ${_name.text}\nTotal: $total\nPercentage: ${perc.toStringAsFixed(2)}%\nStatus: $status');
+        },
+        child: const Text('Generate Result'),
+      ),
+      Text(_res, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+    ],
+  );
+}
