@@ -1,0 +1,215 @@
+import 'dart:io';
+
+void main() {
+  print("=== COER UNIVERSITY - LAB SHEET 1 SOLUTIONS ===\n");
+
+  // 1. Display your name, course, college name, and semester
+  print("--- Program 1 ---");
+  String name = "Rahul Sharma";
+  String course = "B.Tech CSE";
+  String college = "COER University, Roorkee";
+  String semester = "3rd Semester";
+  print("Name: $name, Course: $course, College: $college, Semester: $semester");
+
+  // 2. Declare variables of different data types (int, double, String, bool)
+  print("\n--- Program 2 ---");
+  int age = 20;
+  double height = 5.9;
+  String city = "Roorkee";
+  bool isStudent = true;
+  print("Int: $age, Double: $height, String: $city, Bool: $isStudent");
+
+  // 3. Demonstrate the use of var, final, and const
+  print("\n--- Program 3 ---");
+  var dynamicVar = "Hello Dart"; // Type inferred
+  final currentTime = DateTime.now(); // Runtime constant
+  const double piValue = 3.14159; // Compile-time constant
+  print("Var: $dynamicVar, Final: $currentTime, Const Pi: $piValue");
+
+  // 4. Accept two numbers and display sum, difference, product, and quotient
+  print("\n--- Program 4 ---");
+  double num1 = 10.0, num2 = 5.0;
+  print("Sum: ${num1 + num2}");
+  print("Difference: ${num1 - num2}");
+  print("Product: ${num1 * num2}");
+  print("Quotient: ${num1 / num2}");
+
+  // 5. Calculate area and perimeter of a rectangle
+  print("\n--- Program 5 ---");
+  double length = 10, width = 5;
+  print("Rectangle Area: ${length * width}");
+  print("Rectangle Perimeter: ${2 * (length + width)}");
+
+  // 6. Calculate the area of a circle
+  print("\n--- Program 6 ---");
+  double radius = 7.0;
+  print("Circle Area: ${piValue * radius * radius}");
+
+  // 7. Convert temperature from Celsius to Fahrenheit
+  print("\n--- Program 7 ---");
+  double celsius = 25.0;
+  double fahrenheit = (celsius * 9 / 5) + 32;
+  print("$celsius°C = $fahrenheit°F");
+
+  // 8. Swap the values of two variables
+  print("\n--- Program 8 ---");
+  int a = 5, b = 10;
+  print("Before swap: a = $a, b = $b");
+  int temp = a;
+  a = b;
+  b = temp;
+  print("After swap: a = $a, b = $b");
+
+  // 9. Check whether a given number is positive, negative, or zero
+  print("\n--- Program 9 ---");
+  int checkNum = -5;
+  if (checkNum > 0) {
+    print("$checkNum is Positive");
+  } else if (checkNum < 0) {
+    print("$checkNum is Negative");
+  } else {
+    print("Number is Zero");
+  }
+
+  // 10. Check whether a given number is even or odd
+  print("\n--- Program 10 ---");
+  int evOdd = 4;
+  if (evOdd % 2 == 0) {
+    print("$evOdd is Even");
+  } else {
+    print("$evOdd is Odd");
+  }
+
+  // 11. Find the largest of two numbers
+  print("\n--- Program 11 ---");
+  int t1 = 45, t2 = 78;
+  int largestTwo = (t1 > t2) ? t1 : t2;
+  print("Largest of $t1 and $t2 is $largestTwo");
+
+  // 12. Find the largest of three numbers
+  print("\n--- Program 12 ---");
+  int x = 12, y = 45, z = 23;
+  int largestThree = (x > y) ? (x > z ? x : z) : (y > z ? y : z);
+  print("Largest of $x, $y, $z is $largestThree");
+
+  // 13. Check whether a given year is a leap year
+  print("\n--- Program 13 ---");
+  int year = 2024;
+  bool isLeap = (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
+  print("$year is Leap Year: $isLeap");
+
+  // 14. Calculate grades based on percentage
+  print("\n--- Program 14 ---");
+  double percentage = 82.5;
+  if (percentage >= 90) {
+    print("Grade: A+");
+  } else if (percentage >= 80) {
+    print("Grade: A");
+  } else if (percentage >= 70) {
+    print("Grade: B");
+  } else if (percentage >= 60) {
+    print("Grade: C");
+  } else {
+    print("Grade: F");
+  }
+
+  // 15. Print numbers from 1 to 10 using a for loop
+  print("\n--- Program 15 ---");
+  for (int i = 1; i <= 10; i++) {
+    stdout.write("$i ");
+  }
+  print("");
+
+  // 16. Print all even numbers between 1 and 50
+  print("\n--- Program 16 ---");
+  for (int i = 1; i <= 50; i++) {
+    if (i % 2 == 0) stdout.write("$i ");
+  }
+  print("");
+
+  // 17. Calculate the sum of the first 10 natural numbers
+  print("\n--- Program 17 ---");
+  int sumNatural = 0;
+  for (int i = 1; i <= 10; i++) {
+    sumNatural += i;
+  }
+  print("Sum of first 10 natural numbers: $sumNatural");
+
+  // 18. Generate multiplication table of a given number
+  print("\n--- Program 18 ---");
+  int tableNum = 5;
+  for (int i = 1; i <= 10; i++) {
+    print("$tableNum x $i = ${tableNum * i}");
+  }
+
+  // 19. Calculate the factorial of a given number
+  print("\n--- Program 19 ---");
+  int factNum = 5;
+  int factorial = 1;
+  for (int i = 1; i <= factNum; i++) {
+    factorial *= i;
+  }
+  print("Factorial of $factNum is $factorial");
+
+  // 20. Reverse a given number using a loop
+  print("\n--- Program 20 ---");
+  int originalNum = 12345;
+  int revNum = 0;
+  int tempNum = originalNum;
+  while (tempNum > 0) {
+    int remainder = tempNum % 10;
+    revNum = revNum * 10 + remainder;
+    tempNum ~/= 10;
+  }
+  print("Reverse of $originalNum is $revNum");
+
+  // 21. Function for sum of two numbers
+  print("\n--- Program 21 ---");
+  print("Sum using function: ${addNumbers(15, 25)}");
+
+  // 22. Function to check if number is prime
+  print("\n--- Program 22 ---");
+  int primeCheck = 17;
+  print("$primeCheck is Prime: ${isPrime(primeCheck)}");
+
+  // 23. List of five student names and loop
+  print("\n--- Program 23 ---");
+  List<String> students = ["Aman", "Priya", "Rahul", "Neha", "Karan"];
+  for (String student in students) {
+    print("Student Name: $student");
+  }
+
+  // 24. List of numbers and find largest and smallest
+  print("\n--- Program 24 ---");
+  List<int> numbers = [12, 45, 2, 89, 23, 5];
+  int maxVal = numbers.reduce((curr, next) => curr > next ? curr : next);
+  int minVal = numbers.reduce((curr, next) => curr < next ? curr : next);
+  print("List: $numbers");
+  print("Largest: $maxVal, Smallest: $minVal");
+
+  // 25. Student Result Program
+  print("\n--- Program 25 ---");
+  String studentName = "Amit";
+  double sub1 = 65, sub2 = 70, sub3 = 80;
+  double totalMarks = sub1 + sub2 + sub3;
+  double percent = (totalMarks / 300) * 100;
+  String status = (sub1 >= 33 && sub2 >= 33 && sub3 >= 33 && percent >= 33) ? "Pass" : "Fail";
+  
+  print("Student: $studentName");
+  print("Total Marks: $totalMarks / 300");
+  print("Percentage: ${percent.toStringAsFixed(2)}%");
+  print("Result Status: $status");
+}
+
+// Helper Functions for P21 and P22
+int addNumbers(int n1, int n2) {
+  return n1 + n2;
+}
+
+bool isPrime(int n) {
+  if (n <= 1) return false;
+  for (int i = 2; i <= n ~/ 2; i++) {
+    if (n % i == 0) return false;
+  }
+  return true;
+}
