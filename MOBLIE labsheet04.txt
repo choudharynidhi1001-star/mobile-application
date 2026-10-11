@@ -1,0 +1,1073 @@
+Program 6: Navigate using Navigator.push()
+
+import 'package:flutter/material.dart';
+
+void main() => runApp(const MaterialApp(home: FirstScreen()));
+
+class FirstScreen extends StatelessWidget {
+  const FirstScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('First Screen')),
+      body: Center(
+        child: ElevatedButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const SecondScreen(),
+              ),
+            );
+          },
+          child: const Text('Open New Screen'),
+        ),
+      ),
+    );
+  }
+}
+
+class SecondScreen extends StatelessWidget {
+  const SecondScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Second Screen')),
+      body: const Center(child: Text('New Screen Opened')),
+    );
+  }
+}
+
+
+
+
+Program 7: Return using Navigator.pop()
+
+import 'package:flutter/material.dart';
+
+void main() => runApp(const MaterialApp(home: FirstScreen()));
+
+class FirstScreen extends StatelessWidget {
+  const FirstScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('First Screen')),
+      body: Center(
+        child: ElevatedButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const SecondScreen(),
+              ),
+            );
+          },
+          child: const Text('Go to Second Screen'),
+        ),
+      ),
+    );
+  }
+}
+
+class SecondScreen extends StatelessWidget {
+  const SecondScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Second Screen')),
+      body: Center(
+        child: ElevatedButton(
+          onPressed: () => Navigator.pop(context),
+          child: const Text('Go Back'),
+        ),
+      ),
+    );
+  }
+}
+
+
+Program 8: Home and Detail Screen with forward/backward navigation
+
+import 'package:flutter/material.dart';
+
+void main() => runApp(const MaterialApp(home: HomeScreen()));
+
+class HomeScreen extends StatelessWidget {
+  const HomeScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Home Screen')),
+      body: Center(
+        child: ElevatedButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const DetailScreen(),
+              ),
+            );
+          },
+          child: const Text('View Details'),
+        ),
+      ),
+    );
+  }
+}
+
+class DetailScreen extends StatelessWidget {
+  const DetailScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Detail Screen')),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Text('This is the Detail Screen'),
+            ElevatedButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Back to Home'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+
+
+Program 9: BottomNavigationBar with Home, Profile and Settings
+
+import 'package:flutter/material.dart';
+
+void main() => runApp(const MaterialApp(home: MyHome()));
+
+class MyHome extends StatefulWidget {
+  const MyHome({super.key});
+
+  @override
+  State<MyHome> createState() => _MyHomeState();
+}
+
+class _MyHomeState extends State<MyHome> {
+  int index = 0;
+  final pages = ['Home Screen', 'Profile Screen', 'Settings Screen'];
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Bottom Navigation')),
+      body: Center(
+        child: Text(pages[index], style: const TextStyle(fontSize: 25)),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: index,
+        onTap: (value) => setState(() => index = value),
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.settings), label: 'Settings'),
+        ],
+      ),
+    );
+  }
+}
+
+
+
+Program 10: Switch between three different screens
+
+import 'package:flutter/material.dart';
+
+void main() => runApp(const MaterialApp(home: MainScreen()));
+
+class MainScreen extends StatefulWidget {
+  const MainScreen({super.key});
+
+  @override
+  State<MainScreen> createState() => _MainScreenState();
+}
+
+class _MainScreenState extends State<MainScreen> {
+  int selected = 0;
+
+  final screens = const [
+    Center(child: Text('Welcome to Home')),
+    Center(child: Text('Welcome to About')),
+    Center(child: Text('Welcome to Contact')),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Three Screens')),
+      body: screens[selected],
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: selected,
+        onTap: (value) => setState(() => selected = value),
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+          BottomNavigationBarItem(icon: Icon(Icons.info), label: 'About'),
+          BottomNavigationBarItem(icon: Icon(Icons.phone), label: 'Contact'),
+        ],
+      ),
+    );
+  }
+}
+
+
+Program 11: Drawer with Home, Profile, About and Settings
+
+import 'package:flutter/material.dart';
+
+void main() => runApp(const MaterialApp(home: HomeScreen()));
+
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  String selected = 'Home';
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('My Application')),
+      drawer: Drawer(
+        child: ListView(
+          children: [
+            const DrawerHeader(
+              child: Text('Navigation Menu',
+                  style: TextStyle(fontSize: 22)),
+            ),
+            for (String item in ['Home', 'Profile', 'About', 'Settings'])
+              ListTile(
+                title: Text(item),
+                onTap: () {
+                  setState(() => selected = item);
+                  Navigator.pop(context);
+                },
+              ),
+          ],
+        ),
+      ),
+      body: Center(
+        child: Text('$selected Screen',
+            style: const TextStyle(fontSize: 25)),
+      ),
+    );
+  }
+}
+
+
+Program 12: Open screens using Navigation Drawer
+
+import 'package:flutter/material.dart';
+
+void main() => runApp(const MaterialApp(home: DrawerApp()));
+
+class DrawerApp extends StatefulWidget {
+  const DrawerApp({super.key});
+
+  @override
+  State<DrawerApp> createState() => _DrawerAppState();
+}
+
+class _DrawerAppState extends State<DrawerApp> {
+  String page = 'Home';
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text(page)),
+      drawer: Drawer(
+        child: ListView(
+          children: [
+            const DrawerHeader(child: Text('My Menu')),
+            for (String name in ['Home', 'Courses', 'Faculty', 'Contact'])
+              ListTile(
+                title: Text(name),
+                onTap: () {
+                  setState(() => page = name);
+                  Navigator.pop(context);
+                },
+              ),
+          ],
+        ),
+      ),
+      body: Center(
+        child: Text('$page Screen',
+            style: const TextStyle(fontSize: 25)),
+      ),
+    );
+  }
+}
+
+Program 13: AppBar and Drawer with icons and text
+
+import 'package:flutter/material.dart';
+
+void main() => runApp(const MaterialApp(home: MyAppScreen()));
+
+class MyAppScreen extends StatefulWidget {
+  const MyAppScreen({super.key});
+
+  @override
+  State<MyAppScreen> createState() => _MyAppScreenState();
+}
+
+class _MyAppScreenState extends State<MyAppScreen> {
+  String page = 'Home';
+
+  @override
+  Widget build(BuildContext context) {
+    final names = ['Home', 'Profile', 'About', 'Settings'];
+    final icons = [
+      Icons.home,
+      Icons.person,
+      Icons.info,
+      Icons.settings
+    ];
+
+    return Scaffold(
+      appBar: AppBar(title: const Text('Navigation Drawer')),
+      drawer: Drawer(
+        child: ListView(
+          children: [
+            const DrawerHeader(
+              child: Text('My Application',
+                  style: TextStyle(fontSize: 22)),
+            ),
+            for (int i = 0; i < names.length; i++)
+              ListTile(
+                leading: Icon(icons[i]),
+                title: Text(names[i]),
+                onTap: () {
+                  setState(() => page = names[i]);
+                  Navigator.pop(context);
+                },
+              ),
+          ],
+        ),
+      ),
+      body: Center(
+        child: Text('$page Screen',
+            style: const TextStyle(fontSize: 25)),
+      ),
+    );
+  }
+}
+
+
+
+Program 14: Home, Courses and Contact using BottomNavigationBar
+
+import 'package:flutter/material.dart';
+
+void main() => runApp(const MaterialApp(home: CollegeApp()));
+
+class CollegeApp extends StatefulWidget {
+  const CollegeApp({super.key});
+
+  @override
+  State<CollegeApp> createState() => _CollegeAppState();
+}
+
+class _CollegeAppState extends State<CollegeApp> {
+  int index = 0;
+
+  final pages = const [
+    Center(child: Text('Welcome to College Home')),
+    Center(child: Text('Available Courses: BCA, BBA, MCA')),
+    Center(child: Text('Contact: college@example.com')),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('College App')),
+      body: pages[index],
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: index,
+        onTap: (value) => setState(() => index = value),
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.book), label: 'Courses'),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.contact_phone), label: 'Contact'),
+        ],
+      ),
+    );
+  }
+}
+
+
+
+Program 15: Student Profile, Attendance and Result
+
+import 'package:flutter/material.dart';
+
+void main() => runApp(const MaterialApp(home: StudentHome()));
+
+class StudentHome extends StatelessWidget {
+  const StudentHome({super.key});
+
+  void openScreen(BuildContext context, String title, String info) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => Scaffold(
+          appBar: AppBar(title: Text(title)),
+          body: Center(
+            child: Text(info, style: const TextStyle(fontSize: 22)),
+          ),
+        ),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Student Dashboard')),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            ElevatedButton(
+              onPressed: () => openScreen(
+                  context, 'Student Profile', 'Name: Aanchal\nCourse: BCA'),
+              child: const Text('Student Profile'),
+            ),
+            ElevatedButton(
+              onPressed: () => openScreen(
+                  context, 'Attendance', 'Attendance: 90%'),
+              child: const Text('Attendance'),
+            ),
+            ElevatedButton(
+              onPressed: () => openScreen(
+                  context, 'Result', 'Result: Pass'),
+              child: const Text('Result'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+
+
+Program 16: Pass student's name to another screen
+
+import 'package:flutter/material.dart';
+
+void main() => runApp(const MaterialApp(home: NameScreen()));
+
+class NameScreen extends StatelessWidget {
+  const NameScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('First Screen')),
+      body: Center(
+        child: ElevatedButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => const DisplayScreen(name: 'Aanchal'),
+              ),
+            );
+          },
+          child: const Text('Send Name'),
+        ),
+      ),
+    );
+  }
+}
+
+class DisplayScreen extends StatelessWidget {
+  final String name;
+
+  const DisplayScreen({super.key, required this.name});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Second Screen')),
+      body: Center(
+        child: Text('Student Name: $name',
+            style: const TextStyle(fontSize: 24)),
+      ),
+    );
+  }
+}
+
+
+Program 17: Pass student name and course
+
+import 'package:flutter/material.dart';
+
+void main() => runApp(const MaterialApp(home: StudentInput()));
+
+class StudentInput extends StatefulWidget {
+  const StudentInput({super.key});
+
+  @override
+  State<StudentInput> createState() => _StudentInputState();
+}
+
+class _StudentInputState extends State<StudentInput> {
+  final name = TextEditingController();
+  final course = TextEditingController();
+
+  @override
+  void dispose() {
+    name.dispose();
+    course.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Student Details')),
+      body: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          children: [
+            TextField(
+              controller: name,
+              decoration: const InputDecoration(labelText: 'Student Name'),
+            ),
+            TextField(
+              controller: course,
+              decoration: const InputDecoration(labelText: 'Course'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => StudentDetails(
+                      name: name.text,
+                      course: course.text,
+                    ),
+                  ),
+                );
+              },
+              child: const Text('Submit'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class StudentDetails extends StatelessWidget {
+  final String name;
+  final String course;
+
+  const StudentDetails({
+    super.key,
+    required this.name,
+    required this.course,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Student Details')),
+      body: Center(
+        child: Text(
+          'Name: $name\nCourse: $course',
+          style: const TextStyle(fontSize: 24),
+        ),
+      ),
+    );
+  }
+}
+
+
+Program 18: Form to accept and display student name
+
+import 'package:flutter/material.dart';
+
+void main() => runApp(const MaterialApp(home: StudentForm()));
+
+class StudentForm extends StatefulWidget {
+  const StudentForm({super.key});
+
+  @override
+  State<StudentForm> createState() => _StudentFormState();
+}
+
+class _StudentFormState extends State<StudentForm> {
+  final controller = TextEditingController();
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Student Form')),
+      body: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          children: [
+            TextField(
+              controller: controller,
+              decoration: const InputDecoration(
+                labelText: 'Enter Student Name',
+                border: OutlineInputBorder(),
+              ),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => NameResult(name: controller.text),
+                  ),
+                );
+              },
+              child: const Text('Submit'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class NameResult extends StatelessWidget {
+  final String name;
+
+  const NameResult({super.key, required this.name});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Submitted Name')),
+      body: Center(
+        child: Text('Your Name: $name',
+            style: const TextStyle(fontSize: 24)),
+      ),
+    );
+  }
+}
+
+
+
+Program 19: Pass two numbers and display their sum
+
+import 'package:flutter/material.dart';
+
+void main() => runApp(const MaterialApp(home: NumberScreen()));
+
+class NumberScreen extends StatefulWidget {
+  const NumberScreen({super.key});
+
+  @override
+  State<NumberScreen> createState() => _NumberScreenState();
+}
+
+class _NumberScreenState extends State<NumberScreen> {
+  final first = TextEditingController();
+  final second = TextEditingController();
+
+  @override
+  void dispose() {
+    first.dispose();
+    second.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Add Two Numbers')),
+      body: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          children: [
+            TextField(
+              controller: first,
+              keyboardType: TextInputType.number,
+              decoration: const InputDecoration(labelText: 'First Number'),
+            ),
+            TextField(
+              controller: second,
+              keyboardType: TextInputType.number,
+              decoration: const InputDecoration(labelText: 'Second Number'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                int a = int.tryParse(first.text) ?? 0;
+                int b = int.tryParse(second.text) ?? 0;
+
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => SumScreen(a: a, b: b),
+                  ),
+                );
+              },
+              child: const Text('Calculate Sum'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class SumScreen extends StatelessWidget {
+  final int a;
+  final int b;
+
+  const SumScreen({super.key, required this.a, required this.b});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Sum Result')),
+      body: Center(
+        child: Text('$a + $b = ${a + b}',
+            style: const TextStyle(fontSize: 26)),
+      ),
+    );
+  }
+}
+
+
+
+Program 20: Product name and price
+
+import 'package:flutter/material.dart';
+
+void main() => runApp(const MaterialApp(home: ProductHome()));
+
+class ProductHome extends StatelessWidget {
+  const ProductHome({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Product Home')),
+      body: Center(
+        child: ElevatedButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => const ProductDetails(
+                  name: 'Laptop',
+                  price: 45000,
+                ),
+              ),
+            );
+          },
+          child: const Text('View Product'),
+        ),
+      ),
+    );
+  }
+}
+
+class ProductDetails extends StatelessWidget {
+  final String name;
+  final double price;
+
+  const ProductDetails({
+    super.key,
+    required this.name,
+    required this.price,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Product Details')),
+      body: Center(
+        child: Text(
+          'Product Name: $name\nPrice: ₹${price.toStringAsFixed(0)}',
+          style: const TextStyle(fontSize: 24),
+        ),
+      ),
+    );
+  }
+}
+
+
+
+Program 21: Student List and Student Detail Screen
+
+import 'package:flutter/material.dart';
+
+void main() => runApp(const MaterialApp(home: StudentList()));
+
+class StudentList extends StatelessWidget {
+  const StudentList({super.key});
+
+  final List<Map<String, String>> students = const [
+    {'name': 'Aarav', 'course': 'BCA', 'roll': '101'},
+    {'name': 'Priya', 'course': 'BBA', 'roll': '102'},
+    {'name': 'Rahul', 'course': 'BCA', 'roll': '103'},
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Student List')),
+      body: ListView.builder(
+        itemCount: students.length,
+        itemBuilder: (context, index) {
+          final student = students[index];
+
+          return ListTile(
+            leading: const Icon(Icons.person),
+            title: Text(student['name']!),
+            subtitle: Text(student['course']!),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => StudentDetail(student: student),
+                ),
+              );
+            },
+          );
+        },
+      ),
+    );
+  }
+}
+
+class StudentDetail extends StatelessWidget {
+  final Map<String, String> student;
+
+  const StudentDetail({super.key, required this.student});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Student Details')),
+      body: Center(
+        child: Text(
+          'Name: ${student['name']}\n'
+          'Course: ${student['course']}\n'
+          'Roll Number: ${student['roll']}',
+          style: const TextStyle(fontSize: 23),
+        ),
+      ),
+    );
+  }
+}
+
+
+
+Program 22: Login, Home and Profile screens
+
+import 'package:flutter/material.dart';
+
+void main() => runApp(const MaterialApp(home: LoginScreen()));
+
+class LoginScreen extends StatelessWidget {
+  const LoginScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Login')),
+      body: Center(
+        child: ElevatedButton(
+          onPressed: () {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (_) => const HomeScreen()),
+            );
+          },
+          child: const Text('Login'),
+        ),
+      ),
+    );
+  }
+}
+
+class HomeScreen extends StatelessWidget {
+  const HomeScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Home Screen')),
+      body: Center(
+        child: ElevatedButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => const ProfileScreen()),
+            );
+          },
+          child: const Text('Open Profile'),
+        ),
+      ),
+    );
+  }
+}
+
+class ProfileScreen extends StatelessWidget {
+  const ProfileScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Profile Screen')),
+      body: const Center(
+        child: Text('Student Name: Aanchal\nCourse: BCA'),
+      ),
+    );
+  }
+}
+
+
+Program 23: College app with four screens
+
+import 'package:flutter/material.dart';
+
+void main() => runApp(const MaterialApp(home: CollegeHome()));
+
+class CollegeHome extends StatefulWidget {
+  const CollegeHome({super.key});
+
+  @override
+  State<CollegeHome> createState() => _CollegeHomeState();
+}
+
+class _CollegeHomeState extends State<CollegeHome> {
+  int index = 0;
+
+  final pages = const [
+    Center(child: Text('Welcome to College')),
+    Center(child: Text('Courses: BCA, BBA, MCA')),
+    Center(child: Text('Faculty Information')),
+    Center(child: Text('Contact: college@example.com')),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('College Application')),
+      body: pages[index],
+      drawer: Drawer(
+        child: ListView(
+          children: [
+            const DrawerHeader(child: Text('College Menu')),
+            for (int i = 0; i < 4; i++)
+              ListTile(
+                title: Text(['Home', 'Courses', 'Faculty', 'Contact'][i]),
+                onTap: () {
+                  setState(() => index = i);
+                  Navigator.pop(context);
+                },
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+
+Program 24: Shopping app with four screens
+
+import 'package:flutter/material.dart';
+
+void main() => runApp(const MaterialApp(home: ShoppingApp()));
+
+class ShoppingApp extends StatefulWidget {
+  const ShoppingApp({super.key});
+
+  @override
+  State<ShoppingApp> createState() => _ShoppingAppState();
+}
+
+class _ShoppingAppState extends State<ShoppingApp> {
+  int index = 0;
+
+  final pages = const [
+    Center(child: Text('Welcome to Shopping App')),
+    Center(child: Text('Products: Laptop, Mobile, Headphones')),
+    Center(child: Text('Your Shopping Cart')),
+    Center(child: Text('Your Profile')),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Shopping App')),
+      body: pages[index],
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: index,
+        type: BottomNavigationBarType.fixed,
+        onTap: (value) => setState(() => index = value),
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.shopping_bag), label: 'Products'),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.shopping_cart), label: 'Cart'),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.person), label: 'Profile'),
+        ],
+      ),
+    );
+  }
+}
+
+
+
+Program 25: Student Management Application
+
+import 'package:flutter/material.dart';
+
+void main() => runApp(const MaterialApp(home: StudentManagement()));
+
+class StudentManagement extends StatefulWidget {
+  const StudentManagement({super.key});
+
+  @override
+  State<StudentManagement> createState() => _StudentManagementState();
+}
+
+class _StudentManagementState extends State<StudentManagement> {
+  int index = 0;
+
+  final titles = [
+    'Home',
+    'Student Profile',
+    'Attendance',
+    'Result'
