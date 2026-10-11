@@ -1,0 +1,432 @@
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(const LabSheet2App());
+}
+
+class LabSheet2App extends StatelessWidget {
+  const LabSheet2App({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Lab Sheet - 2 Solutions',
+      theme: ThemeData(primarySwatch: Colors.teal, useMaterial3: true),
+      home: const HomeScreen(),
+    );
+  }
+}
+
+class HomeScreen extends StatelessWidget {
+  const HomeScreen({super.key});
+
+  final List<Map<String, dynamic>> programs = const [
+    {'title': '1. Display Hello Flutter', 'widget': Program1()},
+    {'title': '2. Display Personal Details', 'widget': Program2()},
+    {'title': '3. Text Styles & Alignment', 'widget': Program3()},
+    {'title': '4. Image Widget Example', 'widget': Program4()},
+    {'title': '5. Icon Widget Example', 'widget': Program5()},
+    {'title': '6. Text, Image & Icon Combo', 'widget': Program6()},
+    {'title': '7. Container Customization', 'widget': Program7()},
+    {'title': '8. Row Widget Example', 'widget': Program8()},
+    {'title': '9. Column Widget Example', 'widget': Program9()},
+    {'title': '10. Three Buttons UI', 'widget': Program10()},
+    {'title': '11. Student Profile Card', 'widget': Program11()},
+    {'title': '12. Business Card UI', 'widget': Program12()},
+    {'title': '13. Simple Login Screen', 'widget': Program13()},
+    {'title': '14. Registration Screen', 'widget': Program14()},
+    {'title': '15. College Home Screen', 'widget': Program15()},
+    {'title': '16. Products with Cards', 'widget': Program16()},
+    {'title': '17. Student Info Card', 'widget': Program17()},
+    {'title': '18. Padding & Margin Demo', 'widget': Program18()},
+    {'title': '19. Center & Align Widgets', 'widget': Program19()},
+    {'title': '20. Food Menu Screen', 'widget': Program20()},
+    {'title': '21. Calculator Interface', 'widget': Program21()},
+    {'title': '22. Weather Info Screen', 'widget': Program22()},
+    {'title': '23. Shopping Product Screen', 'widget': Program23()},
+    {'title': '24. Student Dashboard', 'widget': Program24()},
+    {'title': '25. Complete Personal Profile', 'widget': Program25()},
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Lab Sheet - 2 Solutions'),
+        backgroundColor: Colors.teal,
+        foregroundColor: Colors.white,
+      ),
+      body: ListView.builder(
+        itemCount: programs.length,
+        itemBuilder: (context, index) {
+          return Card(
+            margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+            child: ListTile(
+              leading: CircleAvatar(
+                backgroundColor: Colors.teal,
+                foregroundColor: Colors.white,
+                child: Text('${index + 1}'),
+              ),
+              title: Text(programs[index]['title']),
+              trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => Scaffold(
+                      appBar: AppBar(
+                        title: Text(programs[index]['title']),
+                        backgroundColor: Colors.teal,
+                        foregroundColor: Colors.white,
+                      ),
+                      body: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: programs[index]['widget'],
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
+
+// ---------------- LAB SHEET 2 PROGRAM IMPLEMENTATIONS ----------------
+
+// P1: Display "Hello Flutter"
+class Program1 extends StatelessWidget {
+  const Program1({super.key});
+  @override
+  Widget build(BuildContext context) => const Center(
+        child: Text('Hello Flutter', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+      );
+}
+
+// P2: Personal Details
+class Program2 extends StatelessWidget {
+  const Program2({super.key});
+  @override
+  Widget build(BuildContext context) => const Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('Name: Rahul Sharma', style: TextStyle(fontSize: 18)),
+          Text('Course: B.Tech CSE', style: TextStyle(fontSize: 18)),
+          Text('Semester: 5th Semester', style: TextStyle(fontSize: 18)),
+          Text('College: COER University', style: TextStyle(fontSize: 18)),
+        ],
+      );
+}
+
+// P3: Text Styles and Alignment
+class Program3 extends StatelessWidget {
+  const Program3({super.key});
+  @override
+  Widget build(BuildContext context) => const Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Text('Bold Text', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+          Text('Italic Text', style: TextStyle(fontStyle: FontStyle.italic, fontSize: 18)),
+          Text('Large Font Text', style: TextStyle(fontSize: 26, color: Colors.blue)),
+          Text('Center Aligned Text', textAlign: TextAlign.center, style: TextStyle(fontSize: 18)),
+          Text('Right Aligned Text', textAlign: TextAlign.right, style: TextStyle(fontSize: 18)),
+        ],
+      );
+}
+
+// P4: Image Widget
+class Program4 extends StatelessWidget {
+  const Program4({super.key});
+  @override
+  Widget build(BuildContext context) => Center(
+        child: Image.network(
+          'https://picsum.photos/300/200',
+          height: 200,
+          width: 300,
+          fit: BoxFit.cover,
+        ),
+      );
+}
+
+// P5: Icon Widget
+class Program5 extends StatelessWidget {
+  const Program5({super.key});
+  @override
+  Widget build(BuildContext context) => const Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Icon(Icons.home, size: 40, color: Colors.teal),
+          Icon(Icons.favorite, size: 40, color: Colors.red),
+          Icon(Icons.star, size: 40, color: Colors.amber),
+          Icon(Icons.person, size: 40, color: Colors.blue),
+        ],
+      );
+}
+
+// P6: Text, Image, and Icon Together
+class Program6 extends StatelessWidget {
+  const Program6({super.key});
+  @override
+  Widget build(BuildContext context) => Column(
+        children: [
+          const Text('Welcome to Flutter UI', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+          const SizedBox(height: 10),
+          Image.network('https://picsum.photos/250/150'),
+          const SizedBox(height: 10),
+          const Icon(Icons.thumb_up, size: 40, color: Colors.teal),
+        ],
+      );
+}
+
+// P7: Container Widget Customization
+class Program7 extends StatelessWidget {
+  const Program7({super.key});
+  @override
+  Widget build(BuildContext context) => Center(
+        child: Container(
+          height: 150,
+          width: 250,
+          padding: const EdgeInsets.all(20),
+          margin: const EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            color: Colors.teal.shade100,
+            border: Border.all(color: Colors.teal, width: 2),
+            borderRadius: BorderRadius.circular(15),
+            boxShadow: const [BoxShadow(color: Colors.grey, blurRadius: 5)],
+          ),
+          child: const Center(
+            child: Text('Custom Container', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+          ),
+        ),
+      );
+}
+
+// P8: Row Widget Example
+class Program8 extends StatelessWidget {
+  const Program8({super.key});
+  @override
+  Widget build(BuildContext context) => const Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          Text('Text 1', style: TextStyle(fontSize: 18)),
+          Text('Text 2', style: TextStyle(fontSize: 18)),
+          Text('Text 3', style: TextStyle(fontSize: 18)),
+        ],
+      );
+}
+
+// P9: Column Widget Example
+class Program9 extends StatelessWidget {
+  const Program9({super.key});
+  @override
+  Widget build(BuildContext context) => const Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text('Item 1', style: TextStyle(fontSize: 20)),
+          SizedBox(height: 10),
+          Text('Item 2', style: TextStyle(fontSize: 20)),
+          SizedBox(height: 10),
+          Text('Item 3', style: TextStyle(fontSize: 20)),
+        ],
+      );
+}
+
+// P10: Three Buttons (Submit, Reset, Cancel)
+class Program10 extends StatelessWidget {
+  const Program10({super.key});
+  @override
+  Widget build(BuildContext context) => Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          ElevatedButton(onPressed: () {}, child: const Text('Submit')),
+          ElevatedButton(onPressed: () {}, style: ElevatedButton.styleFrom(backgroundColor: Colors.orange), child: const Text('Reset')),
+          ElevatedButton(onPressed: () {}, style: ElevatedButton.styleFrom(backgroundColor: Colors.red), child: const Text('Cancel')),
+        ],
+      );
+}
+
+// P11: Student Profile Card
+class Program11 extends StatelessWidget {
+  const Program11({super.key});
+  @override
+  Widget build(BuildContext context) => Card(
+        elevation: 4,
+        child: Container(
+          padding: const EdgeInsets.all(16),
+          child: Row(
+            children: [
+              const CircleAvatar(radius: 30, child: Icon(Icons.person, size: 35)),
+              const SizedBox(width: 15),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: const [
+                  Text('Amit Kumar', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  Text('Roll No: 210101'),
+                  Text('Department: CSE'),
+                ],
+              )
+            ],
+          ),
+        ),
+      );
+}
+
+// P12: Business Card UI
+class Program12 extends StatelessWidget {
+  const Program12({super.key});
+  @override
+  Widget build(BuildContext context) => Card(
+        color: Colors.teal.shade700,
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: const [
+              CircleAvatar(radius: 40, backgroundImage: NetworkImage('https://picsum.photos/100')),
+              SizedBox(height: 10),
+              Text('John Doe', style: TextStyle(fontSize: 22, color: Colors.white, fontWeight: FontWeight.bold)),
+              Text('Software Engineer', style: TextStyle(color: Colors.white70)),
+              Divider(color: Colors.white30),
+              ListTile(leading: Icon(Icons.phone, color: Colors.white), title: Text('+91 9876543210', style: TextStyle(color: Colors.white))),
+              ListTile(leading: Icon(Icons.email, color: Colors.white), title: Text('john.doe@email.com', style: TextStyle(color: Colors.white))),
+            ],
+          ),
+        ),
+      );
+}
+
+// P13: Simple Login Screen
+class Program13 extends StatelessWidget {
+  const Program13({super.key});
+  @override
+  Widget build(BuildContext context) => Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Icon(Icons.lock, size: 60, color: Colors.teal),
+          const SizedBox(height: 15),
+          const TextField(decoration: InputDecoration(border: OutlineInputBorder(), labelText: 'Username')),
+          const SizedBox(height: 10),
+          const TextField(obscureText: true, decoration: InputDecoration(border: OutlineInputBorder(), labelText: 'Password')),
+          const SizedBox(height: 15),
+          ElevatedButton(onPressed: () {}, child: const Text('Login')),
+        ],
+      );
+}
+
+// P14: Registration Screen
+class Program14 extends StatelessWidget {
+  const Program14({super.key});
+  @override
+  Widget build(BuildContext context) => ListView(
+        children: [
+          const Text('Create Account', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+          const SizedBox(height: 15),
+          const TextField(decoration: InputDecoration(labelText: 'Full Name', border: OutlineInputBorder())),
+          const SizedBox(height: 10),
+          const TextField(decoration: InputDecoration(labelText: 'Email', border: OutlineInputBorder())),
+          const SizedBox(height: 10),
+          const TextField(obscureText: true, decoration: InputDecoration(labelText: 'Password', border: OutlineInputBorder())),
+          const SizedBox(height: 15),
+          ElevatedButton(onPressed: () {}, child: const Text('Register')),
+        ],
+      );
+}
+
+// P15: College Home Screen
+class Program15 extends StatelessWidget {
+  const Program15({super.key});
+  @override
+  Widget build(BuildContext context) => Column(
+        children: [
+          Image.network('https://picsum.photos/400/120', fit: BoxFit.cover),
+          const SizedBox(height: 10),
+          const Text('COER UNIVERSITY', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.teal)),
+          const Divider(),
+          ListTile(leading: const Icon(Icons.school), title: const Text('Academics'), onTap: () {}),
+          ListTile(leading: const Icon(Icons.event), title: const Text('Events'), onTap: () {}),
+          ListTile(leading: const Icon(Icons.contacts), title: const Text('Contact Us'), onTap: () {}),
+        ],
+      );
+}
+
+// P16: Display Products using Card
+class Program16 extends StatelessWidget {
+  const Program16({super.key});
+  @override
+  Widget build(BuildContext context) => ListView(
+        children: [
+          Card(child: ListTile(leading: const Icon(Icons.laptop), title: const Text('Laptop'), subtitle: const Text('₹55,000'))),
+          Card(child: ListTile(leading: const Icon(Icons.phone_android), title: const Text('Smartphone'), subtitle: const Text('₹20,000'))),
+          Card(child: ListTile(leading: const Icon(Icons.headphones), title: const Text('Headphones'), subtitle: const Text('₹2,500'))),
+        ],
+      );
+}
+
+// P17: Student Info Card
+class Program17 extends StatelessWidget {
+  const Program17({super.key});
+  @override
+  Widget build(BuildContext context) => Card(
+        color: Colors.teal.shade50,
+        child: const Padding(
+          padding: EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Student Information', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+              Divider(),
+              Text('Name: Priya Sharma', style: TextStyle(fontSize: 16)),
+              Text('Roll Number: 220150', style: TextStyle(fontSize: 16)),
+              Text('Course: B.Tech', style: TextStyle(fontSize: 16)),
+              Text('Semester: 4th', style: TextStyle(fontSize: 16)),
+            ],
+          ),
+        ),
+      );
+}
+
+// P18: Padding and Margin Demo
+class Program18 extends StatelessWidget {
+  const Program18({super.key});
+  @override
+  Widget build(BuildContext context) => Container(
+        margin: const EdgeInsets.all(20),
+        color: Colors.orange,
+        child: Container(
+          padding: const EdgeInsets.all(30),
+          color: Colors.teal,
+          child: const Text('Inside Padding & Margin', style: TextStyle(color: Colors.white, fontSize: 18)),
+        ),
+      );
+}
+
+// P19: Center and Align Widgets
+class Program19 extends StatelessWidget {
+  const Program19({super.key});
+  @override
+  Widget build(BuildContext context) => Stack(
+        children: [
+          const Align(alignment: Alignment.topLeft, child: Text('Top Left')),
+          const Align(alignment: Alignment.topRight, child: Text('Top Right')),
+          const Center(child: Text('Centered Text', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold))),
+          const Align(alignment: Alignment.bottomLeft, child: Text('Bottom Left')),
+          const Align(alignment: Alignment.bottomRight, child: Text('Bottom Right')),
+        ],
+      );
+}
+
+// P20: Food Menu Screen
+class Program20 extends StatelessWidget {
+  const Program20({super.key});
+  @override
+  Widget build(BuildContext context) => ListView(
+        children: [
+          Card(
+            child: ListTile(
+              leading: const Icon(Icons.fastfood, color: Colors.orange),
+              title
