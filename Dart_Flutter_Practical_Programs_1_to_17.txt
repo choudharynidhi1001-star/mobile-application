@@ -1,0 +1,995 @@
+DART AND FLUTTER PRACTICAL PROGRAMS (1–17)
+University Roorkee, Uttarakhand
+
+IMPORTANT:
+- Programs 1–3 are standalone Dart programs.
+- Programs 4–17 are Flutter examples. Add the listed packages to pubspec.yaml where required.
+- For Flutter programs, place the relevant code inside lib/main.dart of a Flutter project.
+- Some programs use SharedPreferences or path_provider. Run `flutter pub add shared_preferences` or `flutter pub add path_provider` as needed.
+- Program 17's question appears cut off after “allows the user…”, so this implements saving, displaying, and editing the student profile.
+
+------------------------------------------------------------
+1. Store student details in a Map and display all key-value pairs
+------------------------------------------------------------
+
+void main() {
+  Map<String, dynamic> student = {
+    'name': 'Rahul',
+    'rollNumber': 101,
+    'course': 'BCA',
+  };
+
+  student.forEach((key, value) {
+    print('$key: $value');
+  });
+}
+
+------------------------------------------------------------
+2. Convert Student object to Map and Map to Student using toMap/fromMap
+------------------------------------------------------------
+
+class Student {
+  String name;
+  int rollNumber;
+  String course;
+
+  Student({
+    required this.name,
+    required this.rollNumber,
+    required this.course,
+  });
+
+  Map<String, dynamic> toMap() {
+    return {
+      'name': name,
+      'rollNumber': rollNumber,
+      'course': course,
+    };
+  }
+
+  factory Student.fromMap(Map<String, dynamic> map) {
+    return Student(
+      name: map['name'],
+      rollNumber: map['rollNumber'],
+      course: map['course'],
+    );
+  }
+}
+
+void main() {
+  Student student = Student(
+    name: 'Rahul',
+    rollNumber: 101,
+    course: 'BCA',
+  );
+
+  Map<String, dynamic> studentMap = student.toMap();
+  print('Student Map: $studentMap');
+
+  Student newStudent = Student.fromMap(studentMap);
+  print('Name: ${newStudent.name}');
+  print('Roll Number: ${newStudent.rollNumber}');
+  print('Course: ${newStudent.course}');
+}
+
+------------------------------------------------------------
+3. Convert Map to JSON string and JSON string back to Map
+------------------------------------------------------------
+
+import 'dart:convert';
+
+void main() {
+  Map<String, dynamic> student = {
+    'name': 'Rahul',
+    'rollNumber': 101,
+    'course': 'BCA',
+  };
+
+  String jsonString = jsonEncode(student);
+  print('JSON String: $jsonString');
+
+  Map<String, dynamic> decodedMap = jsonDecode(jsonString);
+  print('Decoded Map: $decodedMap');
+}
+
+------------------------------------------------------------
+4. Save user's name using SharedPreferences and show it after reopening
+------------------------------------------------------------
+Dependency: shared_preferences
+Use this as lib/main.dart.
+
+import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+void main() => runApp(const MaterialApp(home: NameApp()));
+
+class NameApp extends StatefulWidget {
+  const NameApp({super.key});
+
+  @override
+  State<NameApp> createState() => _NameAppState();
+}
+
+class _NameAppState extends State<NameApp> {
+  final TextEditingController controller = TextEditingController();
+  String savedName = '';
+
+  @override
+  void initState() {
+    super.initState();
+    loadName();
+  }
+
+  Future<void> loadName() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() => savedName = prefs.getString('name') ?? '');
+  }
+
+  Future<void> saveName() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('name', controller.text);
+    setState(() => savedName = controller.text);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Save Name')),
+      body: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          children: [
+            TextField(
+              controller: controller,
+              decoration: const InputDecoration(labelText: 'Enter name'),
+            ),
+            ElevatedButton(onPressed: saveName, child: const Text('Save')),
+            Text('Saved name: $savedName'),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+------------------------------------------------------------
+5. Store and retrieve an integer counter using SharedPreferences
+------------------------------------------------------------
+Dependency: shared_preferences
+
+import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+void main() => runApp(const MaterialApp(home: CounterApp()));
+
+class CounterApp extends StatefulWidget {
+  const CounterApp({super.key});
+
+  @override
+  State<CounterApp> createState() => _CounterAppState();
+}
+
+class _CounterAppState extends State<CounterApp> {
+  int counter = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    loadCounter();
+  }
+
+  Future<void> loadCounter() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() => counter = prefs.getInt('counter') ?? 0);
+  }
+
+  Future<void> increment() async {
+    final prefs = await SharedPreferences.getInstance();
+    counter++;
+    await prefs.setInt('counter', counter);
+    setState(() {});
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Counter')),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text('Counter: $counter', style: const TextStyle(fontSize: 25)),
+            ElevatedButton(onPressed: increment, child: const Text('Increment')),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+------------------------------------------------------------
+6. Save Dark Mode ON/OFF using Switch and SharedPreferences
+------------------------------------------------------------
+Dependency: shared_preferences
+
+import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+void main() => runApp(const ThemeApp());
+
+class ThemeApp extends StatefulWidget {
+  const ThemeApp({super.key});
+
+  @override
+  State<ThemeApp> createState() => _ThemeAppState();
+}
+
+class _ThemeAppState extends State<ThemeApp> {
+  bool darkMode = false;
+
+  @override
+  void initState() {
+    super.initState();
+    loadTheme();
+  }
+
+  Future<void> loadTheme() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() => darkMode = prefs.getBool('darkMode') ?? false);
+  }
+
+  Future<void> changeTheme(bool value) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('darkMode', value);
+    setState(() => darkMode = value);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      theme: darkMode ? ThemeData.dark() : ThemeData.light(),
+      home: Scaffold(
+        appBar: AppBar(title: const Text('Dark Mode')),
+        body: SwitchListTile(
+          title: const Text('Dark Mode'),
+          value: darkMode,
+          onChanged: changeTheme,
+        ),
+      ),
+    );
+  }
+}
+
+------------------------------------------------------------
+7. Remember Me checkbox on a login screen using SharedPreferences
+------------------------------------------------------------
+Dependency: shared_preferences
+
+import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+void main() => runApp(const MaterialApp(home: LoginApp()));
+
+class LoginApp extends StatefulWidget {
+  const LoginApp({super.key});
+
+  @override
+  State<LoginApp> createState() => _LoginAppState();
+}
+
+class _LoginAppState extends State<LoginApp> {
+  final username = TextEditingController();
+  bool rememberMe = false;
+
+  @override
+  void initState() {
+    super.initState();
+    loadRememberMe();
+  }
+
+  Future<void> loadRememberMe() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      rememberMe = prefs.getBool('rememberMe') ?? false;
+      if (rememberMe) username.text = prefs.getString('username') ?? '';
+    });
+  }
+
+  Future<void> login() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('rememberMe', rememberMe);
+    if (rememberMe) {
+      await prefs.setString('username', username.text);
+    } else {
+      await prefs.remove('username');
+    }
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Login demo completed')),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Login')),
+      body: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          children: [
+            TextField(
+              controller: username,
+              decoration: const InputDecoration(labelText: 'Username'),
+            ),
+            CheckboxListTile(
+              title: const Text('Remember Me'),
+              value: rememberMe,
+              onChanged: (value) => setState(() => rememberMe = value ?? false),
+            ),
+            ElevatedButton(onPressed: login, child: const Text('Login')),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+------------------------------------------------------------
+8. Save and display name, email, and age using SharedPreferences
+------------------------------------------------------------
+Dependency: shared_preferences
+
+import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+void main() => runApp(const MaterialApp(home: ProfileApp()));
+
+class ProfileApp extends StatefulWidget {
+  const ProfileApp({super.key});
+
+  @override
+  State<ProfileApp> createState() => _ProfileAppState();
+}
+
+class _ProfileAppState extends State<ProfileApp> {
+  final name = TextEditingController();
+  final email = TextEditingController();
+  final age = TextEditingController();
+  String details = '';
+
+  @override
+  void initState() {
+    super.initState();
+    loadDetails();
+  }
+
+  Future<void> loadDetails() async {
+    final p = await SharedPreferences.getInstance();
+    setState(() {
+      name.text = p.getString('name') ?? '';
+      email.text = p.getString('email') ?? '';
+      age.text = p.getInt('age')?.toString() ?? '';
+      details = 'Name: ${name.text}\nEmail: ${email.text}\nAge: ${age.text}';
+    });
+  }
+
+  Future<void> saveDetails() async {
+    final p = await SharedPreferences.getInstance();
+    await p.setString('name', name.text);
+    await p.setString('email', email.text);
+    await p.setInt('age', int.tryParse(age.text) ?? 0);
+    setState(() {
+      details = 'Name: ${name.text}\nEmail: ${email.text}\nAge: ${age.text}';
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('User Details')),
+      body: Padding(
+        padding: const EdgeInsets.all(16),
+        child: ListView(
+          children: [
+            TextField(controller: name, decoration: const InputDecoration(labelText: 'Name')),
+            TextField(controller: email, decoration: const InputDecoration(labelText: 'Email')),
+            TextField(controller: age, keyboardType: TextInputType.number,
+              decoration: const InputDecoration(labelText: 'Age')),
+            ElevatedButton(onPressed: saveDetails, child: const Text('Save')),
+            Text(details),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+------------------------------------------------------------
+9. Store and display a list of strings using SharedPreferences
+------------------------------------------------------------
+Dependency: shared_preferences
+
+import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+void main() => runApp(const MaterialApp(home: SubjectsApp()));
+
+class SubjectsApp extends StatefulWidget {
+  const SubjectsApp({super.key});
+
+  @override
+  State<SubjectsApp> createState() => _SubjectsAppState();
+}
+
+class _SubjectsAppState extends State<SubjectsApp> {
+  final controller = TextEditingController();
+  List<String> subjects = [];
+
+  @override
+  void initState() {
+    super.initState();
+    loadSubjects();
+  }
+
+  Future<void> loadSubjects() async {
+    final p = await SharedPreferences.getInstance();
+    setState(() => subjects = p.getStringList('subjects') ?? []);
+  }
+
+  Future<void> addSubject() async {
+    if (controller.text.trim().isEmpty) return;
+    subjects.add(controller.text.trim());
+    final p = await SharedPreferences.getInstance();
+    await p.setStringList('subjects', subjects);
+    controller.clear();
+    setState(() {});
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Favourite Subjects')),
+      body: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          children: [
+            TextField(controller: controller, decoration: const InputDecoration(labelText: 'Subject')),
+            ElevatedButton(onPressed: addSubject, child: const Text('Add')),
+            Expanded(
+              child: ListView.builder(
+                itemCount: subjects.length,
+                itemBuilder: (context, index) => ListTile(title: Text(subjects[index])),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+------------------------------------------------------------
+10. Remove stored SharedPreferences data using a Clear button
+------------------------------------------------------------
+Dependency: shared_preferences
+
+import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+void main() => runApp(const MaterialApp(home: ClearApp()));
+
+class ClearApp extends StatefulWidget {
+  const ClearApp({super.key});
+
+  @override
+  State<ClearApp> createState() => _ClearAppState();
+}
+
+class _ClearAppState extends State<ClearApp> {
+  String value = '';
+
+  Future<void> saveData() async {
+    final p = await SharedPreferences.getInstance();
+    await p.setString('sample', 'Hello Flutter');
+    setState(() => value = 'Hello Flutter');
+  }
+
+  Future<void> clearData() async {
+    final p = await SharedPreferences.getInstance();
+    await p.remove('sample');
+    setState(() => value = '');
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Clear Preferences')),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(value.isEmpty ? 'No saved data' : value),
+            ElevatedButton(onPressed: saveData, child: const Text('Save Data')),
+            ElevatedButton(onPressed: clearData, child: const Text('Clear')),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+------------------------------------------------------------
+11. Show welcome screen only on the first app launch
+------------------------------------------------------------
+Dependency: shared_preferences
+
+import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+void main() => runApp(const WelcomeApp());
+
+class WelcomeApp extends StatefulWidget {
+  const WelcomeApp({super.key});
+
+  @override
+  State<WelcomeApp> createState() => _WelcomeAppState();
+}
+
+class _WelcomeAppState extends State<WelcomeApp> {
+  bool? firstLaunch;
+
+  @override
+  void initState() {
+    super.initState();
+    checkLaunch();
+  }
+
+  Future<void> checkLaunch() async {
+    final p = await SharedPreferences.getInstance();
+    final seen = p.getBool('hasLaunched') ?? false;
+    if (!seen) await p.setBool('hasLaunched', true);
+    setState(() => firstLaunch = !seen);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (firstLaunch == null) {
+      return const MaterialApp(home: Scaffold(body: Center(child: CircularProgressIndicator())));
+    }
+    return MaterialApp(
+      home: Scaffold(
+        appBar: AppBar(title: const Text('Launch Screen')),
+        body: Center(
+          child: Text(firstLaunch! ? 'Welcome! First launch.' : 'Welcome back!'),
+        ),
+      ),
+    );
+  }
+}
+
+------------------------------------------------------------
+12. Write text into a file in the application's documents directory
+------------------------------------------------------------
+Dependency: path_provider
+
+import 'dart:io';
+import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
+
+void main() => runApp(const MaterialApp(home: WriteFileApp()));
+
+class WriteFileApp extends StatefulWidget {
+  const WriteFileApp({super.key});
+
+  @override
+  State<WriteFileApp> createState() => _WriteFileAppState();
+}
+
+class _WriteFileAppState extends State<WriteFileApp> {
+  final controller = TextEditingController();
+  String message = '';
+
+  Future<void> writeFile() async {
+    final directory = await getApplicationDocumentsDirectory();
+    final file = File('${directory.path}/sample.txt');
+    await file.writeAsString(controller.text);
+    setState(() => message = 'Text saved to file.');
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Write File')),
+      body: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          children: [
+            TextField(controller: controller, decoration: const InputDecoration(labelText: 'Enter text')),
+            ElevatedButton(onPressed: writeFile, child: const Text('Save to File')),
+            Text(message),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+------------------------------------------------------------
+13. Read text from a stored file and display it
+------------------------------------------------------------
+Dependency: path_provider
+
+import 'dart:io';
+import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
+
+void main() => runApp(const MaterialApp(home: ReadFileApp()));
+
+class ReadFileApp extends StatefulWidget {
+  const ReadFileApp({super.key});
+
+  @override
+  State<ReadFileApp> createState() => _ReadFileAppState();
+}
+
+class _ReadFileAppState extends State<ReadFileApp> {
+  String content = 'Press the button to read the file.';
+
+  Future<void> readFile() async {
+    final directory = await getApplicationDocumentsDirectory();
+    final file = File('${directory.path}/sample.txt');
+    if (await file.exists()) {
+      content = await file.readAsString();
+    } else {
+      content = 'File not found. Run Program 12 first.';
+    }
+    setState(() {});
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Read File')),
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(content),
+              ElevatedButton(onPressed: readFile, child: const Text('Read File')),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+------------------------------------------------------------
+14. Save a Student object as JSON in SharedPreferences and retrieve it
+------------------------------------------------------------
+Dependency: shared_preferences
+
+import 'dart:convert';
+import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+class Student {
+  final String name;
+  final int rollNumber;
+  final String course;
+
+  Student({required this.name, required this.rollNumber, required this.course});
+
+  Map<String, dynamic> toMap() => {
+    'name': name,
+    'rollNumber': rollNumber,
+    'course': course,
+  };
+
+  factory Student.fromMap(Map<String, dynamic> map) => Student(
+    name: map['name'],
+    rollNumber: map['rollNumber'],
+    course: map['course'],
+  );
+}
+
+void main() => runApp(const MaterialApp(home: StudentJsonApp()));
+
+class StudentJsonApp extends StatefulWidget {
+  const StudentJsonApp({super.key});
+
+  @override
+  State<StudentJsonApp> createState() => _StudentJsonAppState();
+}
+
+class _StudentJsonAppState extends State<StudentJsonApp> {
+  String result = '';
+
+  Future<void> saveStudent() async {
+    final student = Student(name: 'Rahul', rollNumber: 101, course: 'BCA');
+    final p = await SharedPreferences.getInstance();
+    await p.setString('student', jsonEncode(student.toMap()));
+    setState(() => result = 'Student saved successfully.');
+  }
+
+  Future<void> loadStudent() async {
+    final p = await SharedPreferences.getInstance();
+    final jsonString = p.getString('student');
+    if (jsonString == null) {
+      setState(() => result = 'No student saved.');
+      return;
+    }
+    final student = Student.fromMap(jsonDecode(jsonString));
+    setState(() => result =
+        'Name: ${student.name}\nRoll Number: ${student.rollNumber}\nCourse: ${student.course}');
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Student JSON')),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            ElevatedButton(onPressed: saveStudent, child: const Text('Save Student')),
+            ElevatedButton(onPressed: loadStudent, child: const Text('Load Student')),
+            Text(result),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+------------------------------------------------------------
+15. To-Do application whose task list is saved using SharedPreferences
+------------------------------------------------------------
+Dependency: shared_preferences
+
+import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+void main() => runApp(const MaterialApp(home: TodoApp()));
+
+class TodoApp extends StatefulWidget {
+  const TodoApp({super.key});
+
+  @override
+  State<TodoApp> createState() => _TodoAppState();
+}
+
+class _TodoAppState extends State<TodoApp> {
+  final controller = TextEditingController();
+  List<String> tasks = [];
+
+  @override
+  void initState() {
+    super.initState();
+    loadTasks();
+  }
+
+  Future<void> loadTasks() async {
+    final p = await SharedPreferences.getInstance();
+    setState(() => tasks = p.getStringList('tasks') ?? []);
+  }
+
+  Future<void> saveTasks() async {
+    final p = await SharedPreferences.getInstance();
+    await p.setStringList('tasks', tasks);
+  }
+
+  Future<void> addTask() async {
+    if (controller.text.trim().isEmpty) return;
+    tasks.add(controller.text.trim());
+    controller.clear();
+    await saveTasks();
+    setState(() {});
+  }
+
+  Future<void> removeTask(int index) async {
+    tasks.removeAt(index);
+    await saveTasks();
+    setState(() {});
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('To-Do List')),
+      body: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          children: [
+            TextField(controller: controller, decoration: const InputDecoration(labelText: 'New task')),
+            ElevatedButton(onPressed: addTask, child: const Text('Add Task')),
+            Expanded(
+              child: ListView.builder(
+                itemCount: tasks.length,
+                itemBuilder: (context, index) => ListTile(
+                  title: Text(tasks[index]),
+                  trailing: IconButton(
+                    icon: const Icon(Icons.delete),
+                    onPressed: () => removeTask(index),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+------------------------------------------------------------
+16. Notes application that saves notes to a JSON file and loads them at startup
+------------------------------------------------------------
+Dependency: path_provider
+
+import 'dart:convert';
+import 'dart:io';
+import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
+
+void main() => runApp(const MaterialApp(home: NotesApp()));
+
+class NotesApp extends StatefulWidget {
+  const NotesApp({super.key});
+
+  @override
+  State<NotesApp> createState() => _NotesAppState();
+}
+
+class _NotesAppState extends State<NotesApp> {
+  final controller = TextEditingController();
+  List<String> notes = [];
+
+  Future<File> getNotesFile() async {
+    final directory = await getApplicationDocumentsDirectory();
+    return File('${directory.path}/notes.json');
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    loadNotes();
+  }
+
+  Future<void> loadNotes() async {
+    final file = await getNotesFile();
+    if (await file.exists()) {
+      final data = jsonDecode(await file.readAsString()) as List<dynamic>;
+      notes = data.map((item) => item.toString()).toList();
+    }
+    setState(() {});
+  }
+
+  Future<void> saveNotes() async {
+    final file = await getNotesFile();
+    await file.writeAsString(jsonEncode(notes));
+  }
+
+  Future<void> addNote() async {
+    if (controller.text.trim().isEmpty) return;
+    notes.add(controller.text.trim());
+    controller.clear();
+    await saveNotes();
+    setState(() {});
+  }
+
+  Future<void> deleteNote(int index) async {
+    notes.removeAt(index);
+    await saveNotes();
+    setState(() {});
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Notes')),
+      body: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          children: [
+            TextField(controller: controller, decoration: const InputDecoration(labelText: 'Write a note')),
+            ElevatedButton(onPressed: addNote, child: const Text('Save Note')),
+            Expanded(
+              child: ListView.builder(
+                itemCount: notes.length,
+                itemBuilder: (context, index) => ListTile(
+                  title: Text(notes[index]),
+                  trailing: IconButton(
+                    icon: const Icon(Icons.delete),
+                    onPressed: () => deleteNote(index),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+------------------------------------------------------------
+17. Student Profile Application using SharedPreferences
+------------------------------------------------------------
+Dependency: shared_preferences
+The provided question is cut off after “allows the user…”. This version allows saving, viewing, and editing the profile.
+
+import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+void main() => runApp(const MaterialApp(home: StudentProfileApp()));
+
+class StudentProfileApp extends StatefulWidget {
+  const StudentProfileApp({super.key});
+
+  @override
+  State<StudentProfileApp> createState() => _StudentProfileAppState();
+}
+
+class _StudentProfileAppState extends State<StudentProfileApp> {
+  final name = TextEditingController();
+  final roll = TextEditingController();
+  final course = TextEditingController();
+  final semester = TextEditingController();
+  String profile = '';
+
+  @override
+  void initState() {
+    super.initState();
+    loadProfile();
+  }
+
+  Future<void> loadProfile() async {
+    final p = await SharedPreferences.getInstance();
+    name.text = p.getString('studentName') ?? '';
+    roll.text = p.getString('rollNumber') ?? '';
+    course.text = p.getString('course') ?? '';
+    semester.text = p.getString('semester') ?? '';
+    updateProfile();
+  }
+
+  void updateProfile() {
+    setState(() {
+      profile = 'Name: ${name.text}\nRoll Number: ${roll.text}\n'
+          'Course: ${course.text}\nSemester: ${semester.text}';
+    });
+  }
+
+  Future<void> saveProfile() async {
+    final p = await SharedPreferences.getInstance();
+    await p.setString('studentName', name.text);
+    await p.setString('rollNumber', roll.text);
+    await p.setString('course', course.text);
+    await p.setString('semester', semester.text);
+    updateProfile();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Student Profile')),
+      body: Padding(
+        padding: const EdgeInsets.all(16),
+        child: ListView(
+          children: [
+            TextField(controller: name, decoration: const InputDecoration(labelText: 'Student Name')),
+            TextField(controller: roll, decoration: const InputDecoration(labelText: 'Roll Number')),
+            TextField(controller: course, decoration: const InputDecoration(labelText: 'Course')),
+            TextField(controller: semester, decoration: const InputDecoration(labelText: 'Semester')),
+            ElevatedButton(onPressed: saveProfile, child: const Text('Save Profile')),
+            const SizedBox(height: 16),
+            const Text('Saved Profile', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            Text(profile),
+          ],
+        ),
+      ),
+    );
+  }
+}
