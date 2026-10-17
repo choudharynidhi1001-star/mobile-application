@@ -1,0 +1,180 @@
+
+import 'package:flutter/material.dart';
+import 'package:sqflite/sqflite.dart';
+import 'package:path/path.dart';
+
+// COMMON DATABASE (Programs 1-17)
+
+Future<Database> db() async {
+  return openDatabase(
+    join(await getDatabasesPath(), 'lab.db'),
+    version: 1,
+    onCreate: (d, v) async {
+      await d.execute('CREATE TABLE notes(id INTEGER PRIMARY KEY, title TEXT, content TEXT)');
+      await d.execute('CREATE TABLE contacts(id INTEGER PRIMARY KEY, name TEXT, phone TEXT)');
+      await d.execute('CREATE TABLE expenses(id INTEGER PRIMARY KEY, title TEXT, amount REAL)');
+      await d.execute('CREATE TABLE tasks(id INTEGER PRIMARY KEY, title TEXT, done INTEGER)');
+      await d.execute('CREATE TABLE users(id INTEGER PRIMARY KEY, name TEXT, email TEXT, password TEXT)');
+      await d.execute('CREATE TABLE students(id INTEGER PRIMARY KEY, name TEXT, roll INTEGER)');
+      await d.execute('CREATE TABLE products(id INTEGER PRIMARY KEY, name TEXT, qty INTEGER, price REAL)');
+      await d.execute('CREATE TABLE cart(id INTEGER PRIMARY KEY, name TEXT, price REAL)');
+    },
+  );
+}
+
+// 1. ADD AND DISPLAY NOTES
+Future<void> addNote(String title, String content) async {
+  await (await db()).insert('notes', {'title': title, 'content': content});
+}
+Future<List<Map<String, Object?>>> getNotes() async =>
+    (await db()).query('notes');
+
+// 2. EDIT NOTE
+Future<void> editNote(int id, String title, String content) async {
+  await (await db()).update('notes', {'title': title, 'content': content},
+      where: 'id=?', whereArgs: [id]);
+}
+
+// 3. DELETE NOTE
+Future<void> deleteNote(int id) async {
+  await (await db()).delete('notes', where: 'id=?', whereArgs: [id]);
+}
+
+// 4. SEARCH NOTES
+Future<List<Map<String, Object?>>> searchNotes(String title) async =>
+    (await db()).query('notes',
+        where: 'title LIKE ?', whereArgs: ['%$title%']);
+
+// 5. ADD CONTACT
+Future<void> addContact(String name, String phone) async {
+  await (await db()).insert('contacts', {'name': name, 'phone': phone});
+}
+
+// 6. DELETE CONTACT
+Future<void> deleteContact(int id) async {
+  await (await db()).delete('contacts', where: 'id=?', whereArgs: [id]);
+}
+
+// 7. SEARCH CONTACT
+Future<List<Map<String, Object?>>> searchContact(String name) async =>
+    (await db()).query('contacts',
+        where: 'name LIKE ?', whereArgs: ['%$name%']);
+
+// 8. ADD EXPENSE
+Future<void> addExpense(String title, double amount) async {
+  await (await db()).insert('expenses', {'title': title, 'amount': amount});
+}
+
+// 9. TOTAL EXPENSE
+Future<double> totalExpense() async {
+  var r = await (await db()).rawQuery(
+      'SELECT SUM(amount) AS total FROM expenses');
+  return (r.first['total'] as num?)?.toDouble() ?? 0;
+}
+
+// 10. ADD TASK AND UPDATE STATUS
+Future<void> addTask(String title) async {
+  await (await db()).insert('tasks', {'title': title, 'done': 0});
+}
+Future<void> taskStatus(int id, bool done) async {
+  await (await db()).update('tasks', {'done': done ? 1 : 0},
+      where: 'id=?', whereArgs: [id]);
+}
+
+// 11. REGISTRATION
+Future<void> register(String name, String email, String password) async {
+  await (await db()).insert('users',
+      {'name': name, 'email': email, 'password': password});
+}
+
+// 12. LOGIN
+Future<bool> login(String email, String password) async {
+  var r = await (await db()).query('users',
+      where: 'email=? AND password=?',
+      whereArgs: [email, password]);
+  return r.isNotEmpty;
+}
+
+// 13. FORM VALIDATION
+bool validForm(String name, String email, String password) {
+  return name.isNotEmpty &&
+      email.contains('@') &&
+      password.length >= 6;
+}
+
+// 14. STUDENT ADD / VIEW / UPDATE / DELETE
+Future<void> addStudent(String name, int roll) async {
+  await (await db()).insert('students', {'name': name, 'roll': roll});
+}
+Future<List<Map<String, Object?>>> getStudents() async =>
+    (await db()).query('students');
+Future<void> updateStudent(int id, String name, int roll) async {
+  await (await db()).update('students', {'name': name, 'roll': roll},
+      where: 'id=?', whereArgs: [id]);
+}
+Future<void> deleteStudent(int id) async {
+  await (await db()).delete('students', where: 'id=?', whereArgs: [id]);
+}
+
+// 15. PRODUCT INVENTORY
+Future<void> addProduct(String name, int qty, double price) async {
+  await (await db()).insert('products',
+      {'name': name, 'qty': qty, 'price': price});
+}
+Future<void> updateProduct(int id, String name, int qty, double price) async {
+  await (await db()).update('products',
+      {'name': name, 'qty': qty, 'price': price},
+      where: 'id=?', whereArgs: [id]);
+}
+Future<void> deleteProduct(int id) async {
+  await (await db()).delete('products', where: 'id=?', whereArgs: [id]);
+}
+
+// 16. SHOPPING CART
+Future<void> addCart(String name, double price) async {
+  await (await db()).insert('cart', {'name': name, 'price': price});
+}
+Future<double> cartTotal() async {
+  var r = await (await db()).rawQuery(
+      'SELECT SUM(price) AS total FROM cart');
+  return (r.first['total'] as num?)?.toDouble() ?? 0;
+}
+
+// 17. STUDENT MANAGEMENT - LIST
+class StudentList extends StatelessWidget {
+  const StudentList({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Student List')),
+      body: FutureBuilder(
+        future: getStudents(),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          var list = snapshot.data!;
+          return ListView.builder(
+            itemCount: list.length,
+            itemBuilder: (context, i) => ListTile(
+              title: Text('${list[i]['name']}'),
+              subtitle: Text('Roll: ${list[i]['roll']}'),
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await db();
+  runApp(MaterialApp(
+    home: Scaffold(
+      appBar: AppBar(title: const Text('SQLite Lab Sheet 8')),
+      body: const Center(child: Text('Database Created Successfully')),
+    ),
+  ));
+}
