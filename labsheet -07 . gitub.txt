@@ -1,0 +1,199 @@
+
+import 'package:flutter/material.dart';
+import 'package:sqflite/sqflite.dart';
+import 'package:path/path.dart';
+
+void main() => runApp(MaterialApp(home: Home()));
+
+class Student {
+  int? id;
+  String name, course;
+  int roll;
+
+  Student(this.name, this.roll, this.course, {this.id});
+
+  Map<String, dynamic> toMap() =>
+      {'id': id, 'name': name, 'roll': roll, 'course': course};
+
+  factory Student.fromMap(Map<String, dynamic> m) =>
+      Student(m['name'], m['roll'], m['course'], id: m['id']);
+}
+
+class DatabaseHelper {
+  static Future<Database> openDB() async {
+    return openDatabase(
+      join(await getDatabasesPath(), 'student.db'),
+      version: 1,
+      onCreate: (db, v) => db.execute(
+        'CREATE TABLE students(id INTEGER PRIMARY KEY AUTOINCREMENT, '
+        'name TEXT, roll INTEGER, course TEXT)',
+      ),
+    );
+  }
+
+  static Future<int> insert(Student s) async =>
+      (await openDB()).insert('students', s.toMap());
+
+  static Future<int> rawInsert(Student s) async =>
+      (await openDB()).rawInsert(
+        'INSERT INTO students(name,roll,course) VALUES(?,?,?)',
+        [s.name, s.roll, s.course],
+      );
+
+  static Future<List<Student>> read() async {
+    final r = await (await openDB()).query('students', orderBy: 'name ASC');
+    return r.map((e) => Student.fromMap(e)).toList();
+  }
+
+  static Future<List<Student>> rawRead() async {
+    final r = await (await openDB()).rawQuery('SELECT * FROM students');
+    return r.map((e) => Student.fromMap(e)).toList();
+  }
+
+  static Future<int> update(Student s) async =>
+      (await openDB()).update('students', s.toMap(),
+          where: 'id=?', whereArgs: [s.id]);
+
+  static Future<int> delete(int id) async =>
+      (await openDB()).delete('students',
+          where: 'id=?', whereArgs: [id]);
+
+  static Future<void> clear() async =>
+      (await openDB()).delete('students');
+
+  static Future<List<Student>> search(int roll) async {
+    final r = await (await openDB()).query(
+      'students', where: 'roll=?', whereArgs: [roll]);
+    return r.map((e) => Student.fromMap(e)).toList();
+  }
+
+  static Future<List<Student>> byCourse(String course) async {
+    final r = await (await openDB()).query(
+      'students', where: 'course=?', whereArgs: [course]);
+    return r.map((e) => Student.fromMap(e)).toList();
+  }
+
+  static Future<int> count() async =>
+      Sqflite.firstIntValue(
+        await (await openDB()).rawQuery('SELECT COUNT(*) FROM students')) ?? 0;
+}
+
+class Home extends StatefulWidget {
+  @override
+  State<Home> createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
+  final name = TextEditingController();
+  final roll = TextEditingController();
+  final course = TextEditingController();
+  List<Student> students = [];
+  String selected = 'All';
+  int total = 0;
+
+  Future<void> load() async {
+    students = selected == 'All'
+        ? await DatabaseHelper.read()
+        : await DatabaseHelper.byCourse(selected);
+    total = await DatabaseHelper.count();
+    setState(() {});
+  }
+
+  Future<void> save([Student? s]) async {
+    if (s != null) {
+      name.text = s.name;
+      roll.text = '${s.roll}';
+      course.text = s.course;
+    } else {
+      name.clear();
+      roll.clear();
+      course.clear();
+    }
+
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: Text(s == null ? 'Add Student' : 'Edit Student'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(controller: name, decoration: InputDecoration(labelText: 'Name')),
+            TextField(controller: roll, decoration: InputDecoration(labelText: 'Roll')),
+            TextField(controller: course, decoration: InputDecoration(labelText: 'Course')),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () async {
+              final st = Student(name.text, int.tryParse(roll.text) ?? 0,
+                  course.text, id: s?.id);
+              if (s == null) {
+                await DatabaseHelper.insert(st);
+              } else {
+                await DatabaseHelper.update(st);
+              }
+              if (mounted) Navigator.pop(context);
+              await load();
+            },
+            child: Text('Save'),
+          )
+        ],
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('Student Records')),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => save(),
+        child: Icon(Icons.add),
+      ),
+      body: Column(children: [
+        DropdownButton<String>(
+          value: selected,
+          items: ['All', 'BCA', 'BBA', 'MCA']
+              .map((c) => DropdownMenuItem(value: c, child: Text(c)))
+              .toList(),
+          onChanged: (v) {
+            selected = v!;
+            load();
+          },
+        ),
+        Text('Total Students: $total'),
+        ElevatedButton(
+          onPressed: () async {
+            await DatabaseHelper.clear();
+            await load();
+          },
+          child: Text('Clear All'),
+        ),
+        Expanded(
+          child: FutureBuilder<List<Student>>(
+            future: DatabaseHelper.read(),
+            builder: (context, snapshot) {
+              final list = selected == 'All'
+                  ? (snapshot.data ?? [])
+                  : students;
+              return ListView(
+                children: list.map((s) => ListTile(
+                  title: Text(s.name),
+                  subtitle: Text('${s.roll} - ${s.course}'),
+                  onTap: () => save(s),
+                  trailing: IconButton(
+                    icon: Icon(Icons.delete),
+                    onPressed: () async {
+                      await DatabaseHelper.delete(s.id!);
+                      await load();
+                    },
+                  ),
+                )).toList(),
+              );
+            },
+          ),
+        ),
+      ]),
+    );
+  }
+}
