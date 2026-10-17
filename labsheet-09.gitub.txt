@@ -1,0 +1,174 @@
+
+import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+// 1. Find Product Price
+Future<void> findPrice(String id) async {
+  var d = await FirebaseFirestore.instance
+      .collection('products').doc(id).get();
+  print(d.data()?['price']);
+}
+
+// 2. Register User
+Future<void> register(String e, String p) async {
+  await FirebaseAuth.instance
+      .createUserWithEmailAndPassword(email: e, password: p);
+}
+
+// 3. Login User
+Future<void> login(String e, String p) async {
+  await FirebaseAuth.instance
+      .signInWithEmailAndPassword(email: e, password: p);
+}
+
+// 4. Display Email and Logout
+Widget home() => Column(children: [
+  Text(FirebaseAuth.instance.currentUser?.email ?? ''),
+  ElevatedButton(
+    onPressed: () => FirebaseAuth.instance.signOut(),
+    child: Text('Logout'),
+  ),
+]);
+
+// 5. Authentication Error
+Future<void> registerError(
+    BuildContext context, String e, String p) async {
+  try {
+    await FirebaseAuth.instance
+        .createUserWithEmailAndPassword(email: e, password: p);
+  } on FirebaseAuthException catch (x) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(x.message ?? 'Error')));
+  }
+}
+
+// 6. Reset Password
+Future<void> resetPassword(String e) async {
+  await FirebaseAuth.instance.sendPasswordResetEmail(email: e);
+}
+
+// 7. Check Login State
+Widget checkLogin() => StreamBuilder<User?>(
+  stream: FirebaseAuth.instance.authStateChanges(),
+  builder: (context, s) =>
+      Text(s.hasData ? 'Home Screen' : 'Login Screen'),
+);
+
+// 8. Add Student
+Future<void> addStudent() async {
+  await FirebaseFirestore.instance.collection('students').add({
+    'name': 'Rahul', 'roll': '101', 'course': 'BCA'
+  });
+}
+
+// 9. View Students in Real Time
+Widget viewStudents() => StreamBuilder(
+  stream: FirebaseFirestore.instance.collection('students').snapshots(),
+  builder: (context, s) {
+    if (!s.hasData) return CircularProgressIndicator();
+    return ListView(children: s.data!.docs.map((d) =>
+      ListTile(title: Text(d['name']))).toList());
+  },
+);
+
+// 10. Update Student
+Future<void> updateStudent(String id) async {
+  await FirebaseFirestore.instance.collection('students')
+      .doc(id).update({'name': 'Amit'});
+}
+
+// 11. Delete Student
+Future<void> deleteStudent(String id) async {
+  await FirebaseFirestore.instance.collection('students')
+      .doc(id).delete();
+}
+
+// 12. Search Students by Course
+Future<void> searchCourse() async {
+  var s = await FirebaseFirestore.instance.collection('students')
+      .where('course', isEqualTo: 'BCA').get();
+  for (var d in s.docs) {
+    print(d.data());
+  }
+}
+
+// 13. Sort Students by Name
+Future<void> sortStudents() async {
+  var s = await FirebaseFirestore.instance.collection('students')
+      .orderBy('name').get();
+  for (var d in s.docs) {
+    print(d.data());
+  }
+}
+
+// 14. Notes App: Add, View, Delete
+final notes = FirebaseFirestore.instance.collection('notes');
+
+Future<void> addNote(String text) async {
+  await notes.add({
+    'user': FirebaseAuth.instance.currentUser!.uid,
+    'text': text,
+  });
+}
+
+Widget viewNotes() => StreamBuilder(
+  stream: notes.where('user',
+      isEqualTo: FirebaseAuth.instance.currentUser!.uid).snapshots(),
+  builder: (context, s) {
+    if (!s.hasData) return CircularProgressIndicator();
+    return ListView(children: s.data!.docs.map((d) =>
+      ListTile(
+        title: Text(d['text']),
+        trailing: IconButton(
+          icon: Icon(Icons.delete),
+          onPressed: () => d.reference.delete(),
+        ),
+      )).toList());
+  },
+);
+
+// 15. Student Management: Add, View, Update, Delete
+final students = FirebaseFirestore.instance.collection('students');
+
+Future<void> addRecord() async {
+  await students.add({
+    'name': 'Rahul', 'roll': '101', 'course': 'BCA'
+  });
+}
+
+Future<void> updateRecord(String id) async {
+  await students.doc(id).update({'name': 'Aman'});
+}
+
+Future<void> deleteRecord(String id) async {
+  await students.doc(id).delete();
+}
+
+Widget studentList() => StreamBuilder(
+  stream: students.snapshots(),
+  builder: (context, s) {
+    if (!s.hasData) return CircularProgressIndicator();
+    return ListView(children: s.data!.docs.map((d) =>
+      ListTile(
+        title: Text(d['name']),
+        subtitle: Text(d['course']),
+        trailing: IconButton(
+          icon: Icon(Icons.delete),
+          onPressed: () => deleteRecord(d.id),
+        ),
+      )).toList());
+  },
+);
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  runApp(MaterialApp(
+    home: Scaffold(
+      appBar: AppBar(title: Text('Firebase Programs')),
+      body: Center(child: Text('All 15 Programs')),
+    ),
+  ));
+}
